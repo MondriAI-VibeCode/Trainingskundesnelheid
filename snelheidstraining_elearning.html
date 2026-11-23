@@ -1,0 +1,2223 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ROC Mondriaan | Periode 2 Les 2: Trainingsmethoden Snelheidstraining</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    .tab-active {
+      background-color: #0f172a;
+      color: #ffffff;
+      border-color: #0f172a;
+    }
+    .tab-inactive {
+      background-color: #ffffff;
+      color: #475569;
+      border-color: #cbd5e1;
+    }
+    .tab-inactive:hover {
+      background-color: #f1f5f9;
+      color: #0f172a;
+    }
+    .tab-locked {
+      background-color: #f1f5f9;
+      color: #94a3b8;
+      border-color: #e2e8f0;
+      cursor: pointer;
+    }
+    .tab-locked:hover {
+      background-color: #e2e8f0;
+      color: #64748b;
+    }
+    .fade-in {
+      animation: fadeIn 0.22s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* A4 Document Styling voor Preview en PDF */
+    .a4-sheet {
+      width: 210mm;
+      min-height: 297mm;
+      background: #ffffff;
+      margin: 0 auto;
+      padding: 18mm 18mm 18mm 18mm;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      color: #1e293b;
+      box-sizing: border-box;
+    }
+    @media (max-width: 850px) {
+      .a4-sheet {
+        width: 100%;
+        min-height: auto;
+        padding: 20px;
+      }
+    }
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #pdf-document, #pdf-document * {
+        visibility: visible;
+      }
+      #pdf-document {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        box-shadow: none;
+        padding: 12mm;
+      }
+    }
+    .no-break {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Vaste Bovenbalk -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-amber-500 text-slate-950 font-extrabold flex items-center justify-center shadow-sm text-lg shrink-0">
+          ⚡
+        </div>
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-900 text-white">ROC Mondriaan</span>
+            <span class="text-xs font-semibold text-amber-700 bg-amber-100 px-2 py-0.5 rounded">School voor Lifestyle, Sport en Bewegen</span>
+          </div>
+          <h1 class="text-base md:text-lg font-extrabold text-slate-900 leading-tight mt-0.5">
+            Trainingsmethoden: Snelheidstraining &amp; Energiesystemen
+          </h1>
+        </div>
+      </div>
+
+      <!-- Module Navigatie + Voortgangsteller -->
+      <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+        <div id="quiz-progress-pill" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">
+          <span id="quiz-progress-icon">🔒</span>
+          <span id="quiz-progress-text">Vragen: 0 / 12 goed</span>
+        </div>
+
+        <nav class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0" aria-label="Module navigatie">
+          <button id="nav-btn-1" type="button" onclick="window.switchModule(1)" class="tab-active px-3.5 py-2 rounded-lg text-xs md:text-sm font-semibold border transition whitespace-nowrap">
+            1. Lesstof &amp; Toets
+          </button>
+          <button id="nav-btn-2" type="button" onclick="window.switchModule(2)" class="tab-locked px-3.5 py-2 rounded-lg text-xs md:text-sm font-semibold border transition whitespace-nowrap">
+            <span id="nav-lock-2">🔒 </span>2. Ontwerp Training
+          </button>
+          <button id="nav-btn-3" type="button" onclick="window.switchModule(3)" class="tab-locked px-3.5 py-2 rounded-lg text-xs md:text-sm font-semibold border transition whitespace-nowrap">
+            <span id="nav-lock-3">🔒 </span>3. PDF &amp; Teams
+          </button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Toast Melding -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 hidden bg-slate-900 text-white px-4 py-3 rounded-xl shadow-lg text-sm font-medium flex items-center gap-2.5 border border-slate-700">
+    <span id="toast-icon">✅</span>
+    <span id="toast-msg">Opgeslagen</span>
+  </div>
+
+  <!-- Hoofdcontainer -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-6 md:py-8">
+
+    <!-- ========================================================= -->
+    <!-- MODULE 1: INTERACTIEVE LESSTOF & KENNISCHECKS             -->
+    <!-- ========================================================= -->
+    <section id="module-1" class="space-y-8 fade-in">
+
+      <!-- Introductie & Vorige Les Check -->
+      <div class="bg-slate-900 text-white rounded-2xl p-6 md:p-8 shadow-md relative overflow-hidden">
+        <div class="max-w-3xl relative z-10">
+          <span class="inline-block text-xs font-bold uppercase tracking-wider bg-amber-500 text-slate-950 px-2.5 py-1 rounded-md mb-3">
+            ROC Mondriaan • School voor Lifestyle, Sport en Bewegen • Periode 2 – Les 2
+          </span>
+          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight mb-3">
+            Van Methodische Trainingsopbouw tot Snelheidstraining
+          </h2>
+          <p class="text-slate-300 text-sm md:text-base leading-relaxed">
+            Doorloop eerst de logische volgorde van trainen, de 5 trainingsmethoden voor snelheid, de 100m-sprintverdeling en het fosfaat- en melkzuursysteem.
+            <strong class="text-amber-400">Let op (Sudden Death!):</strong> beantwoord alle <strong>12 kennischecks</strong> (4 tussendoor + 8 in de eindtoets) foutloos om <span class="underline">Module 2</span> en <span class="underline">Module 3</span> te ontgrendelen. <strong>Maak je één fout? Dan worden alle vragen gereset en moet je helemaal opnieuw beginnen!</strong>
+          </p>
+        </div>
+
+        <!-- Check Vorige Opdracht: Anamnese in Teams -->
+        <div class="mt-6 bg-slate-800/90 border border-slate-700 rounded-xl p-4 md:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="flex items-start gap-3">
+            <span class="text-2xl mt-0.5">📋</span>
+            <div>
+              <h3 class="font-bold text-amber-400 text-sm uppercase tracking-wide">Check Opdracht Vorige Les: Anamnese</h3>
+              <p class="text-sm text-slate-200 mt-0.5">
+                Heb je de opdracht over de <strong>anamnese</strong> al door je proefpersoon laten invullen en geüpload in <strong>Microsoft Teams</strong>?
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button type="button" onclick="window.setAnamneseStatus(true)" id="btn-anam-yes" class="px-3.5 py-2 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white transition">
+              Ja, geüpload in Teams
+            </button>
+            <button type="button" onclick="window.setAnamneseStatus(false)" id="btn-anam-no" class="px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-700 hover:bg-slate-600 text-slate-200 transition">
+              Nog niet
+            </button>
+          </div>
+        </div>
+        <div id="anamnese-feedback" class="hidden mt-3 text-xs md:text-sm rounded-lg p-3"></div>
+      </div>
+
+      <!-- Stap 1.0: Logische Volgorde & Methodische Trainingsopbouw -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-5">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-600">1.0 De Rode Draad van Training geven</span>
+            <h3 class="text-xl font-extrabold text-slate-900">Logische volgorde: Van Intake tot Hertesten</h3>
+          </div>
+          <span class="text-xs font-semibold bg-slate-100 text-slate-700 px-3 py-1 rounded-full">Klik op een stap voor de inhoud</span>
+        </div>
+
+        <!-- 5 Stappen Knoppen -->
+        <div class="grid grid-cols-1 sm:grid-cols-5 gap-2.5 mb-5">
+          <button type="button" onclick="window.selectStep(1)" id="step-btn-1" class="step-btn text-left p-3 rounded-xl border-2 border-slate-900 bg-slate-900 text-white transition">
+            <div class="text-xs font-bold text-amber-400">Stap 1</div>
+            <div class="font-bold text-sm mt-0.5">Intake (Anamnese)</div>
+            <div class="text-[11px] text-slate-300 mt-0.5">Beginsituatie vaststellen</div>
+          </button>
+          <button type="button" onclick="window.selectStep(2)" id="step-btn-2" class="step-btn text-left p-3 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-slate-400 text-slate-900 transition">
+            <div class="text-xs font-bold text-amber-600">Stap 2</div>
+            <div class="font-bold text-sm mt-0.5">Testen (Nulmeting)</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">Objectief meten</div>
+          </button>
+          <button type="button" onclick="window.selectStep(3)" id="step-btn-3" class="step-btn text-left p-3 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-slate-400 text-slate-900 transition">
+            <div class="text-xs font-bold text-amber-600">Stap 3</div>
+            <div class="font-bold text-sm mt-0.5">SMART Doelen</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">Concreet formuleren</div>
+          </button>
+          <button type="button" onclick="window.selectStep(4)" id="step-btn-4" class="step-btn text-left p-3 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-slate-400 text-slate-900 transition">
+            <div class="text-xs font-bold text-amber-600">Stap 4</div>
+            <div class="font-bold text-sm mt-0.5">Methode &amp; Plan</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">Trainingswetten toepassen</div>
+          </button>
+          <button type="button" onclick="window.selectStep(5)" id="step-btn-5" class="step-btn text-left p-3 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-slate-400 text-slate-900 transition">
+            <div class="text-xs font-bold text-amber-600">Stap 5</div>
+            <div class="font-bold text-sm mt-0.5">Hertesten &amp; Check</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">Doel behaald?</div>
+          </button>
+        </div>
+
+        <!-- Detailweergave gekozen stap -->
+        <div id="step-detail-box" class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-5">
+          <!-- Gevuld via JS -->
+        </div>
+
+        <!-- Kennischeck Tussendoor #1 (over Methodische Opbouw) -->
+        <div id="inline-kc-1-box" class="bg-amber-50/70 border border-amber-300 rounded-xl p-4">
+          <!-- Gevuld via JS -->
+        </div>
+      </div>
+
+      <!-- Stap 1.1 & 1.2: Wat is Snelheid + Vermogen vs. Capaciteit -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Kaart 1.1: Definitie Snelheid & Spiervezels -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-600">1.1 Basisbegrippen</span>
+            <h3 class="text-xl font-extrabold text-slate-900 mt-1 mb-3">Wat is Snelheid?</h3>
+            <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl mb-4">
+              <p class="text-sm md:text-base font-semibold text-slate-900">
+                "Snelheid is het vermogen van de sporter om één of meer motorische acties in een zo kort mogelijke tijd te volbrengen."
+              </p>
+            </div>
+            <ul class="space-y-2.5 text-sm text-slate-700">
+              <li class="flex items-start gap-2.5">
+                <span class="text-amber-600 font-bold">•</span>
+                <span><strong>Aanleg &amp; talent spelen een grote rol:</strong> De verdeling van spiervezeltypes (constitutie) is grotendeels genetisch bepaald.</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="text-amber-600 font-bold">•</span>
+                <span><strong>Witte spiervezels (Type II / Fast-Twitch):</strong> Snelle samentrekking, hoge krachtontwikkeling, maar ook sneller vermoeid.</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="text-amber-600 font-bold">•</span>
+                <span><strong>Trainbaarheid:</strong> Omdat aanleg de bovengrens bepaalt, draait snelheidstraining om maximale kwaliteit, scherpe techniek en het juiste energiesysteem.</span>
+              </li>
+            </ul>
+          </div>
+          <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span>Belangrijkste systeem: Centraal Zenuwstelsel + Witte spiervezels</span>
+            <span class="font-bold text-slate-700">Type IIa / IIx</span>
+          </div>
+        </div>
+
+        <!-- Kaart 1.2: Vermogen vs. Capaciteit + Kennischeck Tussendoor #2 -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-600">1.2 Trainingsfysiologie</span>
+            <h3 class="text-xl font-extrabold text-slate-900 mt-1 mb-3">Vermogen vs. Capaciteit</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+              <div class="bg-blue-50 border border-blue-200 rounded-xl p-3.5">
+                <div class="text-xs font-extrabold uppercase text-blue-800 mb-1">⚡ Vermogen (Power)</div>
+                <p class="text-xs text-slate-700 leading-relaxed">
+                  <strong>Eenmalig voluit energie leveren.</strong><br>
+                  Train je altijd met <strong>volledig herstel</strong> (zodat elke herhaling op 100% kan).
+                </p>
+              </div>
+              <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3.5">
+                <div class="text-xs font-extrabold uppercase text-emerald-800 mb-1">🔋 Capaciteit</div>
+                <p class="text-xs text-slate-700 leading-relaxed">
+                  <strong>Hoe lang je het volhoudt</strong> in een bepaald energiesysteem.<br>
+                  Train je met <strong>onvolledig herstel</strong>.
+                </p>
+              </div>
+            </div>
+
+            <!-- Kennischeck Tussendoor #2 (Vermogen vs. Capaciteit) -->
+            <div id="inline-kc-2-box" class="bg-amber-50/70 border border-amber-300 rounded-xl p-4">
+              <!-- Gevuld via JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stap 1.3: Interactieve 100m Sprint Verdeling -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-4">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-600">1.3 Snelheden in de 100m Sprint</span>
+            <h3 class="text-xl font-extrabold text-slate-900">Verdeling op de 100m: Klik op een fase in de grafiek</h3>
+          </div>
+          <span class="text-xs font-medium text-slate-500">Ontdek welke trainingsmethode bij elke meter hoort</span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center mb-5">
+          <!-- Interactieve SVG Grafiek -->
+          <div class="lg:col-span-7 bg-slate-900 rounded-xl p-4 text-white">
+            <svg viewBox="0 0 600 250" class="w-full h-auto select-none">
+              <!-- Rasterlijnen -->
+              <line x1="55" y1="205" x2="575" y2="205" stroke="#475569" stroke-width="2" />
+              <line x1="55" y1="25" x2="55" y2="205" stroke="#475569" stroke-width="2" />
+              <line x1="55" y1="145" x2="575" y2="145" stroke="#334155" stroke-dasharray="4 4" />
+              <line x1="55" y1="85" x2="575" y2="85" stroke="#334155" stroke-dasharray="4 4" />
+
+              <!-- As-labels -->
+              <text x="15" y="120" fill="#94a3b8" font-size="11" transform="rotate(-90 15 120)" text-anchor="middle">Snelheid (m/s)</text>
+              <text x="315" y="240" fill="#94a3b8" font-size="11" text-anchor="middle">Afstand / Tijd op de 100 meter</text>
+              <text x="45" y="208" fill="#94a3b8" font-size="10" text-anchor="end">0</text>
+              <text x="45" y="148" fill="#94a3b8" font-size="10" text-anchor="end">6</text>
+              <text x="45" y="88" fill="#94a3b8" font-size="10" text-anchor="end">10</text>
+              <text x="45" y="35" fill="#94a3b8" font-size="10" text-anchor="end">12</text>
+
+              <!-- Klikbare Fase-zones -->
+              <rect x="56" y="25" width="54" height="180" fill="#f59e0b" fill-opacity="0.16" class="cursor-pointer hover:fill-opacity-30 transition" onclick="window.selectSprintPhase('reactie')" />
+              <rect x="110" y="25" width="165" height="180" fill="#3b82f6" fill-opacity="0.16" class="cursor-pointer hover:fill-opacity-30 transition" onclick="window.selectSprintPhase('acceleratie')" />
+              <rect x="275" y="25" width="165" height="180" fill="#10b981" fill-opacity="0.16" class="cursor-pointer hover:fill-opacity-30 transition" onclick="window.selectSprintPhase('maximaal')" />
+              <rect x="440" y="25" width="135" height="180" fill="#a855f7" fill-opacity="0.16" class="cursor-pointer hover:fill-opacity-30 transition" onclick="window.selectSprintPhase('uithouding')" />
+
+              <!-- Snelheidscurve -->
+              <path d="M 85 205 Q 145 75, 290 42 L 435 40 Q 510 43, 565 54" fill="none" stroke="#fbbf24" stroke-width="4" stroke-linecap="round" />
+
+              <!-- Fase Punten & Labels -->
+              <g class="cursor-pointer" onclick="window.selectSprintPhase('reactie')">
+                <circle cx="85" cy="205" r="8" fill="#f59e0b" stroke="#fff" stroke-width="2" />
+                <text x="83" y="185" fill="#fcd34d" font-size="11" font-weight="bold" text-anchor="middle">Start (0m)</text>
+                <text x="83" y="222" fill="#cbd5e1" font-size="10" text-anchor="middle">0,12-0,20s</text>
+              </g>
+
+              <g class="cursor-pointer" onclick="window.selectSprintPhase('acceleratie')">
+                <circle cx="190" cy="92" r="8" fill="#3b82f6" stroke="#fff" stroke-width="2" />
+                <text x="192" y="122" fill="#93c5fd" font-size="11" font-weight="bold" text-anchor="middle">0 – 35/40m</text>
+                <text x="192" y="222" fill="#cbd5e1" font-size="10" text-anchor="middle">Acceleratie</text>
+              </g>
+
+              <g class="cursor-pointer" onclick="window.selectSprintPhase('maximaal')">
+                <circle cx="355" cy="41" r="8" fill="#10b981" stroke="#fff" stroke-width="2" />
+                <text x="355" y="65" fill="#6ee7b7" font-size="11" font-weight="bold" text-anchor="middle">40 – 75m</text>
+                <text x="355" y="222" fill="#cbd5e1" font-size="10" text-anchor="middle">Max. Snelheid</text>
+              </g>
+
+              <g class="cursor-pointer" onclick="window.selectSprintPhase('uithouding')">
+                <circle cx="505" cy="46" r="8" fill="#a855f7" stroke="#fff" stroke-width="2" />
+                <text x="505" y="70" fill="#d8b4fe" font-size="11" font-weight="bold" text-anchor="middle">75 – 100m</text>
+                <text x="505" y="222" fill="#cbd5e1" font-size="10" text-anchor="middle">Snelheidsuith.</text>
+              </g>
+            </svg>
+            <div class="flex flex-wrap gap-2 mt-2 justify-center">
+              <button type="button" onclick="window.selectSprintPhase('reactie')" class="px-2.5 py-1 rounded bg-amber-500/20 border border-amber-400/50 text-amber-300 text-xs font-semibold hover:bg-amber-500/30">1. Start: Reactie</button>
+              <button type="button" onclick="window.selectSprintPhase('acceleratie')" class="px-2.5 py-1 rounded bg-blue-500/20 border border-blue-400/50 text-blue-300 text-xs font-semibold hover:bg-blue-500/30">2. 0–40m: Acceleratie</button>
+              <button type="button" onclick="window.selectSprintPhase('maximaal')" class="px-2.5 py-1 rounded bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 text-xs font-semibold hover:bg-emerald-500/30">3. 40–75m: Max. Snelheid</button>
+              <button type="button" onclick="window.selectSprintPhase('uithouding')" class="px-2.5 py-1 rounded bg-purple-500/20 border border-purple-400/50 text-purple-300 text-xs font-semibold hover:bg-purple-500/30">4. 75–100m: Snelheidsuithouding</button>
+            </div>
+          </div>
+
+          <!-- Fase Uitleg Paneel -->
+          <div id="sprint-phase-detail" class="lg:col-span-5 bg-slate-50 border border-slate-200 rounded-xl p-5 min-h-[240px] flex flex-col justify-between">
+            <!-- Gevuld via JS -->
+          </div>
+        </div>
+
+        <!-- Kennischeck Tussendoor #3 (over 100m Verdeling) -->
+        <div id="inline-kc-3-box" class="bg-amber-50/70 border border-amber-300 rounded-xl p-4">
+          <!-- Gevuld via JS -->
+        </div>
+      </div>
+
+      <!-- Stap 1.4: De 5 Trainingsmethoden & F-I-T Principes -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <span class="text-xs font-bold uppercase tracking-wider text-amber-600">1.4 Trainingsmethoden &amp; F-I-T Principes</span>
+        <h3 class="text-xl font-extrabold text-slate-900 mt-1 mb-2">De 5 Trainingsmethoden voor Snelheid</h3>
+        <p class="text-sm text-slate-600 mb-5">
+          Let goed op het verschil tussen <strong>Snelheidsuithoudingsvermogen in het fosfaatsysteem</strong> (langer volhouden zonder sterke verzuring) en <strong>Snelheidsuithoudingsvermogen in het melkzuursysteem</strong> (weerstand tegen verzuring).
+        </p>
+
+        <!-- Methode Tabs -->
+        <div class="flex flex-wrap gap-2 mb-5">
+          <button type="button" onclick="window.selectMethodTab('reactie')" id="m-tab-reactie" class="method-tab tab-active px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold border transition">
+            1. Reactiesnelheid
+          </button>
+          <button type="button" onclick="window.selectMethodTab('acceleratie')" id="m-tab-acceleratie" class="method-tab tab-inactive px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold border transition">
+            2. Acceleratiesnelheid
+          </button>
+          <button type="button" onclick="window.selectMethodTab('maximaal')" id="m-tab-maximaal" class="method-tab tab-inactive px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold border transition">
+            3. Maximale snelheid
+          </button>
+          <button type="button" onclick="window.selectMethodTab('uithouding_atp')" id="m-tab-uithouding_atp" class="method-tab tab-inactive px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold border transition">
+            4. Snelheidsuithouding (Fosfaat)
+          </button>
+          <button type="button" onclick="window.selectMethodTab('uithouding_lactaat')" id="m-tab-uithouding_lactaat" class="method-tab tab-inactive px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold border transition">
+            5. Snelheidsuithouding (Melkzuur)
+          </button>
+        </div>
+
+        <!-- Methode Inhoud -->
+        <div id="method-detail-container" class="bg-slate-50 border border-slate-200 rounded-xl p-5 md:p-6">
+          <!-- Gevuld via JS -->
+        </div>
+      </div>
+
+      <!-- Stap 1.5: Energiesystemen (Fosfaatsysteem + Melkzuursysteem) & Simulatoren -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-amber-600">1.5 Energiesystemen bij Snelheidstraining</span>
+          <h3 class="text-xl font-extrabold text-slate-900 mt-1 mb-2">Fosfaatsysteem (ATP-CP) vs. Melkzuursysteem (Anaeroob Lactisch)</h3>
+          <p class="text-sm text-slate-600">
+            Welk energiesysteem domineert hangt direct af van de <strong>inspanningsduur</strong> en <strong>rusttijd</strong>. Bekijk beide systemen met de interactieve simulatoren hieronder.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Simulator A: Herstel Fosfaatsysteem -->
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-extrabold uppercase px-2.5 py-0.5 rounded bg-blue-100 text-blue-800">Anaeroob Alactisch (0–8 sec)</span>
+                <span class="text-xs font-bold text-slate-500">ATP-CP Herstelmeter</span>
+              </div>
+              <h4 class="font-bold text-slate-900 text-base mb-1">1. Herstel van het Fosfaatsysteem</h4>
+              <p class="text-xs text-slate-600 mb-4">
+                Bij explosieve acties tot ca. 6–8 seconden gebruik je ATP en creatinefosfaat (CP). Kies een rusttijd na een maximale sprint:
+              </p>
+
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+                <button type="button" onclick="window.updateAtpSimulator(25)" id="atp-btn-25" class="atp-btn px-2.5 py-2 rounded-lg text-xs font-bold border border-slate-300 bg-white hover:bg-slate-100">
+                  20–30 sec
+                </button>
+                <button type="button" onclick="window.updateAtpSimulator(40)" id="atp-btn-40" class="atp-btn px-2.5 py-2 rounded-lg text-xs font-bold border border-slate-300 bg-white hover:bg-slate-100">
+                  40 sec
+                </button>
+                <button type="button" onclick="window.updateAtpSimulator(60)" id="atp-btn-60" class="atp-btn px-2.5 py-2 rounded-lg text-xs font-bold border border-slate-300 bg-white hover:bg-slate-100">
+                  60 sec
+                </button>
+                <button type="button" onclick="window.updateAtpSimulator(240)" id="atp-btn-240" class="atp-btn px-2.5 py-2 rounded-lg text-xs font-bold border border-slate-900 bg-slate-900 text-white">
+                  3–5 min
+                </button>
+              </div>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-xl p-4">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-bold text-slate-600">ATP &amp; CP Voorraad Hersteld:</span>
+                <span id="atp-percent-text" class="text-lg font-extrabold text-emerald-600">95 – 100%</span>
+              </div>
+              <div class="w-full h-3.5 bg-slate-200 rounded-full overflow-hidden mb-2.5">
+                <div id="atp-progress-bar" class="h-full bg-emerald-500 transition-all duration-300" style="width: 98%;"></div>
+              </div>
+              <p id="atp-advice-text" class="text-xs text-slate-700 leading-relaxed">
+                <strong>Volledig herstel:</strong> Ideaal voor <em>maximale snelheid</em> en <em>acceleratiesnelheid</em> (vermogen trainen).
+              </p>
+            </div>
+          </div>
+
+          <!-- Simulator B: Melkzuursysteem & Sprintduur -->
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-extrabold uppercase px-2.5 py-0.5 rounded bg-rose-100 text-rose-800">Anaeroob Lactisch (8–45+ sec)</span>
+                <span class="text-xs font-bold text-slate-500">Sprintduur Simulator</span>
+              </div>
+              <h4 class="font-bold text-slate-900 text-base mb-1">2. Het Melkzuursysteem (Glycolyse zonder O₂)</h4>
+              <p class="text-xs text-slate-600 mb-3">
+                Verschuif de sprintduur om te zien wanneer het fosfaatsysteem leeg raakt en het melkzuursysteem (verzuring) het overneemt:
+              </p>
+
+              <div class="mb-3">
+                <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                  <span>Inspanningsduur: <span id="lactate-sec-label" class="text-rose-600 text-sm">15 seconden</span></span>
+                  <span id="lactate-zone-badge" class="px-2 py-0.5 rounded bg-amber-100 text-amber-800">Overgang / Lactisch</span>
+                </div>
+                <input id="lactate-slider" type="range" min="2" max="50" value="15" oninput="window.updateLactateSimulator(this.value)" class="w-full accent-rose-600 cursor-pointer" />
+                <div class="flex justify-between text-[10px] text-slate-400 mt-0.5">
+                  <span>2s (Start)</span>
+                  <span>6s (ATP-CP grens)</span>
+                  <span>20s (400m tempo)</span>
+                  <span>50s (Zware verzuring)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-xl p-4 space-y-2.5">
+              <div>
+                <div class="flex justify-between text-[11px] font-bold mb-1">
+                  <span class="text-blue-700">Fosfaatsysteem: <span id="share-atp">45%</span></span>
+                  <span class="text-rose-700">Melkzuursysteem: <span id="share-lac">55%</span></span>
+                </div>
+                <div class="w-full h-3 bg-slate-200 rounded-full overflow-hidden flex">
+                  <div id="bar-atp" class="bg-blue-500 h-full transition-all duration-200" style="width: 45%;"></div>
+                  <div id="bar-lac" class="bg-rose-500 h-full transition-all duration-200" style="width: 55%;"></div>
+                </div>
+              </div>
+              <p id="lactate-advice-text" class="text-xs text-slate-700 leading-relaxed">
+                <strong>Melkzuursysteem neemt over:</strong> Bij sprints langer dan 8–10 seconden ontstaat melkzuur (lactaat + H⁺-ionen). Je traint nu snelheidsuithoudingsvermogen in het melkzuursysteem.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vergelijkingstabel Snelheidsuithoudingsvermogen -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs md:text-sm border border-slate-200 rounded-xl overflow-hidden">
+            <thead>
+              <tr class="bg-slate-900 text-white">
+                <th class="p-3 font-bold">Kenmerk</th>
+                <th class="p-3 font-bold text-blue-300">Snelheidsuithouding – Fosfaatsysteem</th>
+                <th class="p-3 font-bold text-rose-300">Snelheidsuithouding – Melkzuursysteem</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 bg-white">
+              <tr>
+                <td class="p-3 font-semibold text-slate-800">Doel</td>
+                <td class="p-3 text-slate-700">Maximale snelheid <strong>langer vasthouden</strong> binnen het fosfaatsysteem zonder sterke verzuring (bijv. 75–100m sprint of herhaalde korte acties).</td>
+                <td class="p-3 text-slate-700">Snelheid vasthouden en <strong>weerstand bieden tegen verzuring</strong> bij langere sprints of intensieve herhaalde acties (bijv. 150–300m, 400m horden, hockey/voetbal omschakeling).</td>
+              </tr>
+              <tr class="bg-slate-50">
+                <td class="p-3 font-semibold text-slate-800">Duur per herhaling</td>
+                <td class="p-3 text-slate-700"><strong>Max. 6 – 8 seconden</strong> (zodat ATP-CP leidend blijft)</td>
+                <td class="p-3 text-slate-700"><strong>10 – 40 seconden</strong> (anaerobe glycolyse domineert)</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold text-slate-800">Intensiteit</td>
+                <td class="p-3 text-slate-700"><strong>95 – 100%</strong> van maximale snelheid</td>
+                <td class="p-3 text-slate-700"><strong>85 – 95%</strong> van maximale snelheid</td>
+              </tr>
+              <tr class="bg-slate-50">
+                <td class="p-3 font-semibold text-slate-800">Rustinterval</td>
+                <td class="p-3 text-slate-700"><strong>1 – 3 minuten</strong> (gedeeltelijk ATP-CP herstel van ca. 75–90%)</td>
+                <td class="p-3 text-slate-700"><strong>1 – 3 min</strong> (lactaattolerantie, hoge verzuring) of <strong>4 – 8 min</strong> (lactaatproductie, hoge kwaliteit)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Kennischeck Tussendoor #4 (over Energiesystemen) -->
+        <div id="inline-kc-4-box" class="bg-amber-50/70 border border-amber-300 rounded-xl p-4">
+          <!-- Gevuld via JS -->
+        </div>
+      </div>
+
+      <!-- Stap 1.6: Overige Snelheidsvormen & Organisatievormen -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          <span class="text-xs font-bold uppercase tracking-wider text-amber-600">1.6 Overige Snelheidsvormen</span>
+          <h3 class="text-lg font-extrabold text-slate-900 mt-1 mb-3">Cyclisch, Acyclisch, Handeling &amp; Snelkracht</h3>
+          <div class="space-y-3 text-xs md:text-sm text-slate-700">
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <strong class="text-slate-900">Cyclische snelheid:</strong> Zich herhalende bewegingen met juiste techniek (bijv. sprinten, zwemmen, wielrennen).
+            </div>
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <strong class="text-slate-900">Acyclische snelheid:</strong> Snelheid in een eenmalige explosieve beweging (bijv. werpen, stoten, springen).
+            </div>
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <strong class="text-slate-900">Handelingssnelheid (actiesnelheid):</strong> Snelle acties binnen specifieke coördinatiepatronen (bijv. schaar bij voetbal, bokscombinatie).
+            </div>
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <strong class="text-slate-900">Snelkracht:</strong> Relatief lage weerstand (<strong>20–50% van Fmax</strong>) zo snel mogelijk overwinnen (bijv. 50m vlinderslag, forehand tennis).
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          <span class="text-xs font-bold uppercase tracking-wider text-amber-600">1.7 Praktijkorganisatie</span>
+          <h3 class="text-lg font-extrabold text-slate-900 mt-1 mb-3">Circuittraining vs. Stationstraining</h3>
+          <div class="space-y-4 text-xs md:text-sm text-slate-700">
+            <div class="p-4 rounded-xl bg-amber-50/70 border border-amber-200">
+              <div class="font-extrabold text-slate-900 mb-1">🔄 Circuittraining</div>
+              <ul class="list-disc list-inside space-y-1">
+                <li>In doorstroomvorm verschillende oefeningen achter elkaar.</li>
+                <li>Elke oefening <strong>1 serie/set</strong> uitvoeren, daarna doorschuiven.</li>
+                <li>Meerdere rondgangen mogelijk (geschikt voor groepen &amp; individueel).</li>
+              </ul>
+            </div>
+            <div class="p-4 rounded-xl bg-blue-50/70 border border-blue-200">
+              <div class="font-extrabold text-slate-900 mb-1">📍 Stationstraining</div>
+              <ul class="list-disc list-inside space-y-1">
+                <li>Ook in doorstroomvorm opgesteld.</li>
+                <li>Op elk station werk je eerst <strong>meerdere series/sets</strong> af (inclusief de vereiste rust van je snelheidsmethode) voordat je doorgaat.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stap 1.8: Verplichte Eindtoets (Vragen 5 t/m 12) -->
+      <div class="bg-white rounded-2xl border-2 border-slate-900 p-6 md:p-8 shadow-md">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-6">
+          <div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded bg-amber-500 text-slate-950">Verplichte Kennistoets</span>
+              <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded bg-rose-100 text-rose-800 border border-rose-300">⚠️ 1 fout = alles opnieuw</span>
+            </div>
+            <h3 class="text-xl md:text-2xl font-extrabold text-slate-900 mt-2">Eindcheck Lesstof &amp; 100m Sprintverdeling</h3>
+            <p class="text-sm text-slate-600 mt-1">
+              Beantwoord alle 8 eindvragen goed (samen met de 4 tussentijdse kennischecks zijn dit <strong>12 vragen</strong>). Bij één fout antwoord start je weer op 0 / 12.
+            </p>
+          </div>
+          <div id="quiz-status-box" class="bg-slate-100 border border-slate-300 rounded-xl px-4 py-3 text-right shrink-0">
+            <div class="text-xs font-bold text-slate-500 uppercase">Totale Voortgang</div>
+            <div id="quiz-score-big" class="text-xl font-extrabold text-slate-900">0 / 12 goed</div>
+          </div>
+        </div>
+
+        <div id="final-quiz-container" class="space-y-5">
+          <!-- Vragen 5 t/m 12 worden via JS gerenderd -->
+        </div>
+
+        <!-- Ontgrendel-banner wanneer alles goed is -->
+        <div id="unlock-banner" class="hidden mt-6 bg-emerald-600 text-white rounded-xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow">
+          <div class="flex items-center gap-3">
+            <span class="text-3xl">🎉</span>
+            <div>
+              <h4 class="font-extrabold text-base md:text-lg">Top! Alle 12 kennisvragen in één reeks goed beantwoord!</h4>
+              <p class="text-xs md:text-sm text-emerald-100">Je hebt nu toegang tot het ontwerpen van je eigen snelheidstraining en het downloaden van de PDF voor Teams.</p>
+            </div>
+          </div>
+          <button type="button" onclick="window.switchModule(2)" class="px-5 py-3 rounded-xl bg-white text-emerald-900 font-extrabold text-sm hover:bg-emerald-50 transition shrink-0 shadow">
+            Ga naar Module 2: Ontwerp Training →
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- MODULE 2: OPDRACHT ONTWERP EEN SNELHEIDSTRAINING           -->
+    <!-- ========================================================= -->
+    <section id="module-2" class="hidden space-y-6 fade-in">
+
+      <!-- Headerbalk Module 2 -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-amber-600">ROC Mondriaan • Opdracht Periode 2 Les 2</span>
+          <h2 class="text-2xl font-extrabold text-slate-900 mt-0.5">Ontwerp een Snelheidstraining</h2>
+          <p class="text-sm text-slate-600 mt-1">
+            Pas minimaal <strong>2 verschillende trainingsmethoden</strong> toe, onderbouw je keuzes met de energiesystemen en trainingswetten en exporteer je schema als PDF voor Teams.
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 shrink-0">
+          <button type="button" onclick="window.openPasswordModal()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 transition flex items-center gap-1.5">
+            <span>🔐</span> Laad Voorbeeldtraining (Voetbal)
+          </button>
+          <button type="button" onclick="window.openResetModal()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-rose-100 text-slate-700 hover:text-rose-800 border border-slate-300 transition">
+            Wis alles
+          </button>
+        </div>
+      </div>
+
+      <!-- Gegevens Student & Proefpersoon -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <h3 class="text-base font-extrabold text-slate-900 mb-4 flex items-center gap-2">
+          <span class="w-6 h-6 rounded-full bg-slate-900 text-white text-xs flex items-center justify-center">0</span>
+          Student- &amp; Opdrachtgegevens
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Naam student(en) *</label>
+            <input type="text" id="inp-student" oninput="window.saveFormData()" placeholder="Bijv. Jan de Vries" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Klas / Cohort *</label>
+            <input type="text" id="inp-klas" oninput="window.saveFormData()" placeholder="Bijv. LSB-2A" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Proefpersoon / Doelgroep</label>
+            <input type="text" id="inp-proefpersoon" oninput="window.saveFormData()" placeholder="Bijv. Voetballer JO19-1" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Datum</label>
+            <input type="date" id="inp-datum" oninput="window.saveFormData()" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Stap 1 & Stap 2 -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-4 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          <h3 class="text-base font-extrabold text-slate-900 mb-3 flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-slate-900 text-white text-xs flex items-center justify-center">1</span>
+            Kies een sport
+          </h3>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Gekozen sport *</label>
+          <input type="text" id="inp-sport" oninput="window.saveFormData()" placeholder="Bijv. Voetbal, Atletiek, Hockey, Tennis" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-amber-500" />
+          <label class="block text-xs font-bold text-slate-700 mb-1">SMART-doelstelling voor deze sporter</label>
+          <textarea id="inp-smart" rows="3" oninput="window.saveFormData()" placeholder="Bijv. Over 6 weken verbetert de speler zijn 20m sprinttijd van 3,15s naar 3,02s..." class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"></textarea>
+        </div>
+
+        <div class="lg:col-span-8 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          <h3 class="text-base font-extrabold text-slate-900 mb-3 flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-slate-900 text-white text-xs flex items-center justify-center">2</span>
+            Analyseer de snelheidseisen
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Welke soorten snelheid zijn belangrijk? *</label>
+              <textarea id="inp-soorten" rows="4" oninput="window.saveFormData()" placeholder="Benoem min. 2 soorten (bijv. reactiesnelheid, acceleratiesnelheid, handelingssnelheid, snelheidsuithouding fosfaat/melkzuur)..." class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"></textarea>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Waarom zijn deze belangrijk voor de prestatie? *</label>
+              <textarea id="inp-waarom-eisen" rows="4" oninput="window.saveFormData()" placeholder="Koppel aan wedstrijdsituaties in de gekozen sport (bijv. eerste 10 meter vrijlopen, omschakelen)..." class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stap 3: Dynamische Trainingssessie Bouwer -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+          <div>
+            <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-slate-900 text-white text-xs flex items-center justify-center">3</span>
+              Ontwerp de trainingssessie (Minimaal 2 verschillende methodes)
+            </h3>
+            <p class="text-xs text-slate-500 mt-1">Voeg trainingsblokken toe of verwijder ze. Kies per blok een methode om de bijbehorende F-I-T richtlijn te zien.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span id="method-count-badge" class="text-xs font-bold px-3 py-1.5 rounded-lg bg-amber-100 text-amber-800 border border-amber-300">
+              0 / 2 unieke methodes
+            </span>
+            <button type="button" onclick="window.addTrainingBlock()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white transition">
+              + Trainingsblok toevoegen
+            </button>
+          </div>
+        </div>
+
+        <!-- Warming-up & Cooling-down -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5 bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Warming-up (inclusief activatie &amp; loopscholing)</label>
+            <input type="text" id="inp-warmup" oninput="window.saveFormData()" placeholder="Bijv. 10 min inlopen, dynamisch rekken, loopscholing & 3x steigerung" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Cooling-down</label>
+            <input type="text" id="inp-cooldown" oninput="window.saveFormData()" placeholder="Bijv. 5 min rustig uitlopen en losmaken" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white" />
+          </div>
+        </div>
+
+        <!-- Dynamische Blokken Container -->
+        <div id="training-blocks-container" class="space-y-4">
+          <!-- Blokken worden via JS gerenderd -->
+        </div>
+
+        <div class="mt-4 flex justify-start">
+          <button type="button" onclick="window.addTrainingBlock()" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 transition">
+            + Nog een trainingsblok toevoegen
+          </button>
+        </div>
+      </div>
+
+      <!-- Stap 4: Onderbouwing & Trainingswetten -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <h3 class="text-base font-extrabold text-slate-900 mb-3 flex items-center gap-2">
+          <span class="w-6 h-6 rounded-full bg-slate-900 text-white text-xs flex items-center justify-center">4</span>
+          Licht je keuzes toe (Energiesystemen &amp; Trainingswetten)
+        </h3>
+
+        <div class="mb-4">
+          <label class="block text-xs font-bold text-slate-700 mb-2">Welke trainingswetten pas je toe in dit plan?</label>
+          <div class="flex flex-wrap gap-2">
+            <label class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-300 bg-slate-50 text-xs font-semibold cursor-pointer">
+              <input type="checkbox" class="wet-checkbox accent-slate-900" value="Specificiteit" onchange="window.saveFormData()" />
+              Specificiteit
+            </label>
+            <label class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-300 bg-slate-50 text-xs font-semibold cursor-pointer">
+              <input type="checkbox" class="wet-checkbox accent-slate-900" value="Overload (overbelasting)" onchange="window.saveFormData()" />
+              Overload
+            </label>
+            <label class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-300 bg-slate-50 text-xs font-semibold cursor-pointer">
+              <input type="checkbox" class="wet-checkbox accent-slate-900" value="Supercompensatie & Herstel" onchange="window.saveFormData()" />
+              Supercompensatie &amp; Herstel
+            </label>
+            <label class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-300 bg-slate-50 text-xs font-semibold cursor-pointer">
+              <input type="checkbox" class="wet-checkbox accent-slate-900" value="Verminderde meeropbrengst" onchange="window.saveFormData()" />
+              Verminderde meeropbrengst
+            </label>
+            <label class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-300 bg-slate-50 text-xs font-semibold cursor-pointer">
+              <input type="checkbox" class="wet-checkbox accent-slate-900" value="Reversibiliteit" onchange="window.saveFormData()" />
+              Reversibiliteit
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Toelichting op methodes, rusttijden (ATP-CP / Melkzuur) en trainingswetten *</label>
+          <textarea id="inp-toelichting" rows="4" oninput="window.saveFormData()" placeholder="Leg uit waarom deze methodes, intensiteit en rusttijden passen bij jouw sporter en energiesysteem, en hoe je na afloop hertest..." class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"></textarea>
+        </div>
+
+        <div class="mt-6 flex justify-end">
+          <button type="button" onclick="window.switchModule(3)" class="px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm shadow transition">
+            Bekijk A4 Voorbeeld &amp; Download PDF voor Teams →
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- MODULE 3: A4 VOORVERTOON & DOWNLOAD PDF VOOR TEAMS        -->
+    <!-- ========================================================= -->
+    <section id="module-3" class="hidden space-y-6 fade-in">
+
+      <!-- Actiebalk -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-emerald-600">Klaar om in te leveren in Microsoft Teams</span>
+          <h2 class="text-2xl font-extrabold text-slate-900 mt-0.5">A4 Inleverdocument &amp; PDF Export</h2>
+          <p class="text-sm text-slate-600 mt-1">
+            Controleer hieronder je A4-document en download het als PDF-bestand om te uploaden in de Teams-opdracht van ROC Mondriaan.
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2.5 shrink-0">
+          <button type="button" onclick="window.switchModule(2)" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 transition">
+            ← Terug naar bewerken
+          </button>
+          <button type="button" onclick="window.print()" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 transition">
+            🖨️ Print / Opslaan als PDF
+          </button>
+          <button type="button" id="btn-download-pdf" onclick="window.downloadPdf()" class="px-5 py-2.5 rounded-xl text-sm font-extrabold bg-emerald-600 hover:bg-emerald-500 text-white shadow transition flex items-center gap-2">
+            <span>⬇️</span> Download PDF voor Teams
+          </button>
+        </div>
+      </div>
+
+      <!-- Compleetheidscheck -->
+      <div id="completeness-box" class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+        <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-3">Inlever-checklist</h3>
+        <div id="completeness-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 text-xs">
+          <!-- Gevuld via JS -->
+        </div>
+      </div>
+
+      <!-- A4 Voorbeeld Document -->
+      <div class="overflow-x-auto pb-8">
+        <div id="pdf-document" class="a4-sheet">
+          <!-- Header A4 -->
+          <div class="border-b-2 border-slate-900 pb-4 mb-5 flex justify-between items-start gap-4">
+            <div>
+              <div class="text-[11px] font-bold uppercase tracking-wider text-amber-600">ROC Mondriaan • School voor Lifestyle, Sport en Bewegen</div>
+              <h1 class="text-xl font-extrabold text-slate-900 mt-0.5">Opdracht: Ontwerp een Snelheidstraining</h1>
+              <div class="text-xs text-slate-500 mt-0.5">Periode 2 – Les 2: Trainingsmethoden Snelheidstraining</div>
+            </div>
+            <div class="text-right text-xs text-slate-700 space-y-0.5">
+              <div><strong>Student:</strong> <span id="prev-student">-</span></div>
+              <div><strong>Klas:</strong> <span id="prev-klas">-</span></div>
+              <div><strong>Proefpersoon:</strong> <span id="prev-proefpersoon">-</span></div>
+              <div><strong>Datum:</strong> <span id="prev-datum">-</span></div>
+            </div>
+          </div>
+
+          <!-- Stap 1 & 2 op A4 -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5 no-break">
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-3">
+              <div class="text-[10px] font-bold uppercase text-amber-700">Stap 1: Gekozen Sport</div>
+              <div id="prev-sport" class="text-sm font-extrabold text-slate-900 mt-1">-</div>
+              <div class="text-[10px] font-bold uppercase text-slate-500 mt-2">SMART-Doelstelling</div>
+              <div id="prev-smart" class="text-xs text-slate-700 mt-0.5 whitespace-pre-line">-</div>
+            </div>
+            <div class="sm:col-span-2 bg-slate-50 border border-slate-200 rounded-lg p-3">
+              <div class="text-[10px] font-bold uppercase text-amber-700">Stap 2: Analyse Snelheidseisen</div>
+              <div class="text-xs font-bold text-slate-800 mt-1">Belangrijke soorten snelheid:</div>
+              <div id="prev-soorten" class="text-xs text-slate-700 mt-0.5 mb-2 whitespace-pre-line">-</div>
+              <div class="text-xs font-bold text-slate-800">Belang voor de prestatie:</div>
+              <div id="prev-waarom-eisen" class="text-xs text-slate-700 mt-0.5 whitespace-pre-line">-</div>
+            </div>
+          </div>
+
+          <!-- Stap 3: Trainingsschema Tabel op A4 -->
+          <div class="mb-5">
+            <div class="text-xs font-extrabold uppercase tracking-wider text-slate-900 mb-2">Stap 3: Trainingsschema (Snelheidstraining)</div>
+            <div class="text-xs bg-amber-50 border border-amber-200 rounded-lg p-2.5 mb-2.5 text-slate-800">
+              <strong>Warming-up:</strong> <span id="prev-warmup">-</span>
+            </div>
+
+            <table class="w-full border-collapse border border-slate-300 text-[11px]">
+              <thead>
+                <tr class="bg-slate-900 text-white">
+                  <th class="border border-slate-300 p-2 text-left">Blok &amp; Methode</th>
+                  <th class="border border-slate-300 p-2 text-left">Oefening &amp; Uitvoering</th>
+                  <th class="border border-slate-300 p-2 text-left">Tijd (Herh. / Duur)</th>
+                  <th class="border border-slate-300 p-2 text-left">Rust (Herstel)</th>
+                  <th class="border border-slate-300 p-2 text-left">Intensiteit &amp; Freq.</th>
+                </tr>
+              </thead>
+              <tbody id="prev-blocks-tbody">
+                <!-- Gevuld via JS -->
+              </tbody>
+            </table>
+
+            <div class="text-xs bg-slate-50 border border-slate-200 rounded-lg p-2.5 mt-2.5 text-slate-800">
+              <strong>Cooling-down:</strong> <span id="prev-cooldown">-</span>
+            </div>
+          </div>
+
+          <!-- Stap 4: Toelichting op A4 -->
+          <div class="border border-slate-200 rounded-lg p-3.5 bg-slate-50 no-break">
+            <div class="text-xs font-extrabold uppercase tracking-wider text-slate-900 mb-1">Stap 4: Onderbouwing Keuzes, Energiesystemen &amp; Trainingswetten</div>
+            <div class="text-xs text-slate-700 mb-2">
+              <strong>Toegepaste trainingswetten:</strong> <span id="prev-wetten">-</span>
+            </div>
+            <div id="prev-toelichting" class="text-xs text-slate-800 leading-relaxed whitespace-pre-line">-</div>
+          </div>
+
+          <!-- Voettekst A4 -->
+          <div class="mt-6 pt-3 border-t border-slate-200 flex justify-between text-[10px] text-slate-400">
+            <span>ROC Mondriaan – School voor Lifestyle, Sport en Bewegen</span>
+            <span>Inleveren via Microsoft Teams (PDF)</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ========================================================= -->
+  <!-- MODALS (Sudden Death Reset, Wachtwoord & Wis Bevestiging) -->
+  <!-- ========================================================= -->
+
+  <!-- Modal: Sudden Death Reset bij een fout antwoord -->
+  <div id="sudden-death-modal" class="fixed inset-0 z-50 hidden bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border-2 border-rose-500 text-center">
+      <div class="w-14 h-14 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center text-3xl mx-auto mb-3">
+        💥
+      </div>
+      <span class="inline-block text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded bg-rose-100 text-rose-800 mb-2">
+        Fout antwoord!
+      </span>
+      <h3 class="text-xl font-extrabold text-slate-900 mb-2">Je moet helemaal opnieuw beginnen</h3>
+      <p id="sd-reason-text" class="text-sm text-slate-600 mb-5 leading-relaxed">
+        Je hebt een vraag fout beantwoord. Alle eerder goed beantwoorde kennischecks zijn gereset naar <strong>0 / 12</strong>. Lees de lesstof goed door en probeer het opnieuw!
+      </p>
+      <button type="button" onclick="window.closeSuddenDeathModal()" class="w-full py-3 rounded-xl text-sm font-extrabold bg-slate-900 hover:bg-slate-800 text-white transition shadow">
+        Begrepen, start opnieuw vanaf vraag 1
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal: Wachtwoord voor Voorbeeldtraining -->
+  <div id="password-modal" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-200">
+      <div class="flex items-center justify-between mb-3">
+        <h3 id="pwd-modal-title" class="text-lg font-extrabold text-slate-900">🔐 Docentenwachtwoord vereist</h3>
+        <button type="button" onclick="window.closePasswordModal()" class="text-slate-400 hover:text-slate-700 text-xl font-bold">&times;</button>
+      </div>
+      <p id="pwd-modal-desc" class="text-xs md:text-sm text-slate-600 mb-4">
+        Voer het docentenwachtwoord in om de voorbeeldtraining (Voetbal) te laden.
+      </p>
+      <input type="password" id="pwd-input" onkeydown="if(event.key==='Enter') window.submitPassword()" placeholder="Wachtwoord..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm mb-2 focus:outline-none focus:ring-2 focus:ring-amber-500" />
+      <div id="pwd-error" class="hidden text-xs font-bold text-rose-600 mb-3">Onjuist wachtwoord. Vraag je docent om de toegangscode.</div>
+      <div class="flex justify-end gap-2 mt-4">
+        <button type="button" onclick="window.closePasswordModal()" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700">Annuleren</button>
+        <button type="button" onclick="window.submitPassword()" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white">Bevestigen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Veilig Wissen -->
+  <div id="reset-modal" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-200">
+      <h3 class="text-lg font-extrabold text-slate-900 mb-2">Formulier leegmaken?</h3>
+      <p class="text-sm text-slate-600 mb-5">
+        Weet je zeker dat je alle ingevulde gegevens en trainingsblokken wilt wissen? Dit kan niet ongedaan worden gemaakt.
+      </p>
+      <div class="flex justify-end gap-2">
+        <button type="button" onclick="window.closeResetModal()" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700">Annuleren</button>
+        <button type="button" onclick="window.confirmResetAll()" class="px-4 py-2 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white">Ja, wis alles</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- VOLLEDIGE JAVASCRIPT LOGICA                               -->
+  <!-- ========================================================= -->
+  <script>
+    (function () {
+      const STORAGE_KEY = 'mondriaan_snelheid_v5';
+      const QUIZ_STORAGE_KEY = 'mondriaan_snelheid_quiz_v5';
+      const DOCENT_PWD = 'TK2026!';
+
+      // State voor voortgang (4 tussentijdse kennischecks + 8 eindquizvragen = 12 totaal)
+      let quizState = {
+        inline: {}, // { 1: true, 2: true, 3: true, 4: true }
+        final: {}   // { 0: true, ... 7: true }
+      };
+
+      // Standaard formulierdata
+      let formData = {
+        student: '',
+        klas: '',
+        proefpersoon: '',
+        datum: new Date().toISOString().split('T')[0],
+        sport: '',
+        smart: '',
+        soorten: '',
+        waaromEisen: '',
+        warmup: '',
+        cooldown: '',
+        wetten: [],
+        toelichting: '',
+        blocks: [
+          {
+            id: 1,
+            methode: 'Reactiesnelheid',
+            oefening: '',
+            tijd: '',
+            rust: '',
+            intensiteit: '',
+            frequentie: ''
+          },
+          {
+            id: 2,
+            methode: 'Acceleratiesnelheid',
+            oefening: '',
+            tijd: '',
+            rust: '',
+            intensiteit: '',
+            frequentie: ''
+          }
+        ]
+      };
+
+      // Data: 5 Stappen Methodische Trainingsopbouw
+      const STEP_DATA = {
+        1: {
+          title: 'Stap 1: Beginsituatie vaststellen via Intake (Anamnese)',
+          badge: 'Startpunt van elke begeleiding',
+          desc: 'Voordat je gaat testen of trainen, breng je de sporter volledig in kaart via een gestructureerde intake (anamnese):',
+          bullets: [
+            '<strong>Algemeen:</strong> Leeftijd, lengte, gewicht, studie/werk en dagelijkse belasting.',
+            '<strong>Gezondheid:</strong> Blessuregeschiedenis, huidige klachten, medicatie, slaap en belastbaarheid.',
+            '<strong>Sociaal:</strong> Trainingsmogelijkheden, steun uit omgeving, motivatie en beschikbaarheid.',
+            '<strong>Sport:</strong> Sportachtergrond, niveau, trainingsuren per week en specifieke positie-eisen.'
+          ]
+        },
+        2: {
+          title: 'Stap 2: Testen (Nulmeting)',
+          badge: 'Meten is weten',
+          desc: 'Op basis van de anamnese en de sport kies je een valide en betrouwbare snelheidstest om de beginsituatie objectief vast te leggen:',
+          bullets: [
+            'Kies een test die aansluit bij het gevraagde snelheidstype (bijv. 10m/20m sprint voor acceleratie, T-test voor wendbaarheid, 100m voor topsnelheid).',
+            'Zorg voor standaardisatie (dezelfde ondergrond, schoenen, warming-up en meetwijze).'
+          ]
+        },
+        3: {
+          title: 'Stap 3: Doelen stellen (SMART formuleren)',
+          badge: 'Richting geven aan het plan',
+          desc: 'Met de testuitslag uit stap 2 formuleer je samen met de sporter een concreet doel volgens het SMART-principe:',
+          bullets: [
+            '<strong>S</strong>pecifiek: Welke snelheidsvorm wil je verbeteren?',
+            '<strong>M</strong>eetbaar: In seconden of meters (gebaseerd op je nulmeting).',
+            '<strong>A</strong>cceptabel: Sluit aan bij de wens en motivatie van de sporter.',
+            '<strong>R</strong>ealistisch: Haalbaar binnen de trainbaarheid (let op aanleg/witte spiervezels!).',
+            '<strong>T</strong>ijdgebonden: Binnen welke periode (bijv. 6 weken) wordt het doel behaald?'
+          ]
+        },
+        4: {
+          title: 'Stap 4: Trainingsmethode kiezen & Plan maken (Trainingswetten)',
+          badge: 'Van doel naar uitvoering',
+          desc: 'Kies de juiste snelheidsmethode(n) met bijbehorende F-I-T waarden en pas de trainingswetten toe:',
+          bullets: [
+            '<strong>Specificiteit:</strong> Train exact de beweging, afstand en het energiesysteem uit de sport.',
+            '<strong>Overload:</strong> Geef een prikkel op 100% (of 100–110% supramaximaal) zodat het lichaam zich aanpast.',
+            '<strong>Supercompensatie &amp; Herstel:</strong> Respecteer de 3–6 min rust tussen sprints én 48–72 uur herstel tussen zware snelheidstrainingen.',
+            '<strong>Verminderde meeropbrengst:</strong> Hoe getrainder de sporter, hoe kleiner de winstmarge.'
+          ]
+        },
+        5: {
+          title: 'Stap 5: Uitvoeren, Hertesten & Evalueren',
+          badge: 'Cirkel rond maken',
+          desc: 'Na het doorlopen van het trainingsplan voer je exact dezelfde test opnieuw uit onder dezelfde omstandigheden:',
+          bullets: [
+            'Vergelijk de eindmeting met de nulmeting en je SMART-doelstelling.',
+            'Is het doel behaald? Stel een nieuw vervolgdoel of onderhoudsplan op (voorkom <em>reversibiliteit</em>).',
+            'Is het doel nog niet behaald? Analyseer welke F-I-T variabele (rust, intensiteit, frequentie) bijgesteld moet worden.'
+          ]
+        }
+      };
+
+      // Data: 100m Sprint Fasen
+      const SPRINT_PHASES = {
+        reactie: {
+          tag: 'Fase 1 • Startschot (0 meter)',
+          color: 'text-amber-600',
+          title: 'Reactiesnelheid (0,12 – 0,20 sec)',
+          desc: 'Het vermogen om zo snel mogelijk op een akoestisch (startschot) of optisch (beweging) prikkel te reageren. Een reactie sneller dan 0,10 sec is fysiologisch onmogelijk en geldt als valse start.',
+          training: 'Trainingsmethode: Reactiesnelheid (4–6 herh., 1–2 min rust, 100%, 1–2x/week).'
+        },
+        acceleratie: {
+          tag: 'Fase 2 • 0 tot 35/40 meter',
+          color: 'text-blue-600',
+          title: 'Acceleratiesnelheid (Versnellen)',
+          desc: 'In een zo kort mogelijke tijd een zo hoog mogelijke snelheid bereiken vanuit stilstand of lage snelheid. Dit vraagt vooral veel explosieve kracht en voorwaartse lichaamshouding.',
+          training: 'Trainingsmethode: Acceleratiesnelheid (4–6 herh. van max. 6 sec, 2–6 min rust, 100%, 1–2x/week).'
+        },
+        maximaal: {
+          tag: 'Fase 3 • 40 tot 75 meter',
+          color: 'text-emerald-600',
+          title: 'Maximale snelheid (Topsnelheid)',
+          desc: 'De hoogste absolute basissnelheid die de sprinter bereikt (rond 5–6 seconden na de start). Hier draait alles om optimale looptechniek, pasfrequentie, paslengte en coördinatie.',
+          training: 'Trainingsmethode: Maximale snelheid (tot 6 herh. van max. 6 sec, 6 min rust, 100–110%, 1–2x/week).'
+        },
+        uithouding: {
+          tag: 'Fase 4 • 75 tot 100 meter',
+          color: 'text-purple-600',
+          title: 'Snelheidsuithoudingsvermogen (Fosfaatsysteem)',
+          desc: 'Na ca. 6–7 seconden raakt het ATP-CP systeem uitgeput en daalt de snelheid licht. De winnaar op de 100m is degene die zijn maximale snelheid het langst vasthoudt binnen het fosfaatsysteem zonder te verkrampen.',
+          training: 'Trainingsmethode: Snelheidsuithouding – Fosfaatsysteem (6 herh. van max. 6–8 sec, 1–3 min rust, 95–100%, 1–2x/week).'
+        }
+      };
+
+      // Data: 5 Trainingsmethoden & F-I-T Richtlijnen
+      const METHODS_DATA = {
+        reactie: {
+          title: '1. Reactiesnelheidstraining',
+          subtitle: 'Zo snel mogelijk reageren op een prikkel (enkelvoudig of complex)',
+          details: [
+            '<strong>Akoestisch signaal:</strong> gemiddelde reactietijd 0,12 – 0,27 sec.',
+            '<strong>Optisch signaal:</strong> gemiddelde reactietijd 0,15 – 0,20 sec (< 0,10 sec = valse start).',
+            '<strong>Enkelvoudig vs. Complex:</strong> Reageren op 1 vast signaal vs. anticiperen op wisselende spelsituaties.',
+            '<strong>Trainbaarheid:</strong> Grotendeels aangeboren (CZS & zenuwbanen); tot ca. 5% winst door training.'
+          ],
+          f: '1 – 2x per week (altijd uitgerust aan het begin van de training)',
+          i: '100% van maximale scherpte en snelheid',
+          t: '4 – 6 herhalingen (korte actie 1–3 sec), 1 – 2 minuten rust',
+          shortFit: 'FIT: 4–6 herh. | 1–2 min rust | 100% | 1–2x/week'
+        },
+        acceleratie: {
+          title: '2. Acceleratiesnelheidstraining',
+          subtitle: 'In een zo kort mogelijke tijd versnellen naar topsnelheid',
+          details: [
+            '<strong>Krachtcomponent:</strong> Accelereren vraagt maximale krachtontwikkeling in de eerste meters (0–35m).',
+            '<strong>Energiesysteem:</strong> Puur fosfaatsysteem (ATP-CP), daarom maximaal 6 seconden per sprint.',
+            '<strong>Vermogen trainen:</strong> Volledige rust is noodzakelijk om elke herhaling even explosief te starten.'
+          ],
+          f: '1 – 2x per week',
+          i: '100% van maximale snelheid',
+          t: '4 – 6 herhalingen van max. 6 seconden, 2 – 6 minuten volledig herstel',
+          shortFit: 'FIT: 4–6 herh. (max 6s) | 2–6 min rust | 100% | 1–2x/week'
+        },
+        maximaal: {
+          title: '3. Maximale snelheidstraining',
+          subtitle: 'Verhogen van de absolute topsnelheid / basissnelheid',
+          details: [
+            '<strong>Kracht + Coördinatie:</strong> Optimale looptechniek en ontspanning op topsnelheid zijn cruciaal.',
+            '<strong>Vliegende sprints:</strong> Vaak met een aanloop van 20–30m gevolgd door 20–30m op topsnelheid (totaal max. 6 sec voluit).',
+            '<strong>Supramaximaal (100–110%):</strong> Bijv. lichte wind mee of licht helling af om de pasfrequentie te verhogen.'
+          ],
+          f: '1 – 2x per week',
+          i: '100 – 110% van maximale snelheid',
+          t: 'Tot maximaal 6 herhalingen van max. 6 seconden, 6 minuten volledig herstel',
+          shortFit: 'FIT: Max 6 herh. (tot 6s) | 6 min rust | 100–110% | 1–2x/week'
+        },
+        uithouding_atp: {
+          title: '4. Snelheidsuithoudingsvermogen – Fosfaatsysteem (Alactisch)',
+          subtitle: 'Maximale snelheid langer vasthouden binnen het ATP-CP systeem zonder sterke verzuring',
+          details: [
+            '<strong>Doel:</strong> De capaciteit van het fosfaatsysteem vergroten zodat je topsnelheid langer vasthoudt (bijv. laatste 30m van de 100m of herhaalde korte sprints in teamsport).',
+            '<strong>Geen zware verzuring:</strong> De inspanningsduur blijft beperkt tot max. 6–8 seconden zodat melkzuur niet gaat overheersen.',
+            '<strong>Gedeeltelijk herstel:</strong> Met 1–3 min rust herstelt 75–90% van je ATP-CP voorraad.'
+          ],
+          f: '1 – 2x per week',
+          i: '95 – 100% van maximale snelheid',
+          t: '6 herhalingen van max. 6 – 8 seconden, 1 – 3 minuten rust',
+          shortFit: 'FIT: 6 herh. (6–8s) | 1–3 min rust | 95–100% | 1–2x/week'
+        },
+        uithouding_lactaat: {
+          title: '5. Snelheidsuithoudingsvermogen – Melkzuursysteem (Lactisch)',
+          subtitle: 'Hoge snelheid vasthouden en weerstand bieden tegen optredende verzuring',
+          details: [
+            '<strong>Doel:</strong> Snelheid behouden wanneer het fosfaatsysteem leeg is en de anaerobe glycolyse (melkzuur) domineert (10–40 seconden).',
+            '<strong>Toepassing:</strong> 200m–400m atletiek, 100m zwemmen, of langere intensieve omschakelingen bij voetbal/hockey.',
+            '<strong>Rustkeuze:</strong> Korte rust (1–3 min) traint lactaattolerantie; langere rust (4–8 min) traint maximale lactaatproductie met behoud van techniek.'
+          ],
+          f: '1 – 2x per week (vraagt 48–72 uur herstel)',
+          i: '85 – 95% van maximale snelheid',
+          t: '3 – 6 herhalingen van 10 – 40 seconden, 1 – 3 min (tolerantie) of 4 – 8 min rust (productie)',
+          shortFit: 'FIT: 3–6 herh. (10–40s) | 1–3 of 4–8 min rust | 85–95% | 1–2x/week'
+        }
+      };
+
+      // Data: 4 Tussentijdse Kennischecks (Vragen 1 t/m 4)
+      const INLINE_CHECKS = {
+        1: {
+          label: 'Kennischeck Tussendoor 1 • Methodische Opbouw',
+          question: 'Welke 4 domeinen breng je altijd in kaart tijdens de intake (anamnese) om de beginsituatie vast te stellen?',
+          options: [
+            'Algemeen, Gezondheid, Sociaal en Sport',
+            'Kracht, Snelheid, Lenigheid en Uithoudingsvermogen',
+            'Warming-up, Kern, Cooling-down en Evaluatie'
+          ],
+          correct: 0,
+          explanation: 'Juist! De anamnese brengt Algemeen, Gezondheid, Sociaal en Sport in kaart voordat je gaat testen en een SMART-doel opstelt.'
+        },
+        2: {
+          label: 'Kennischeck Tussendoor 2 • Vermogen vs. Capaciteit',
+          question: 'Je wilt het <u>vermogen</u> van het fosfaatsysteem (maximale topsnelheid) trainen. Hoe richt je de rustpauze in?',
+          options: [
+            'Volledig herstel (3–6 min rust)',
+            'Onvolledig herstel (30 sec rust)'
+          ],
+          correct: 0,
+          explanation: 'Goed! Vermogen (= eenmalig voluit energie leveren) train je altijd met volledig herstel (3–6 min), zodat de ATP-CP voorraad weer 95–100% aangevuld is.'
+        },
+        3: {
+          label: 'Kennischeck Tussendoor 3 • 100m Sprint Verdeling',
+          question: 'Welke twee trainingsmethoden staan centraal tussen de <strong>0 en 75 meter</strong> van een 100m sprint (na het startschot)?',
+          options: [
+            'Eerst acceleratiesnelheid (0–40m) en daarna maximale snelheid (40–75m)',
+            'Eerst snelheidsuithoudingsvermogen in het melkzuursysteem en daarna reactiesnelheid',
+            'Alleen reactiesnelheid over de gehele 75 meter'
+          ],
+          correct: 0,
+          explanation: 'Klopt! Na de reactie op het startschot volgt eerst de versnellingsfase (0–40m: acceleratie) en daarna de topsnelheidsfase (40–75m: maximale snelheid).'
+        },
+        4: {
+          label: 'Kennischeck Tussendoor 4 • Fosfaat- vs. Melkzuursysteem',
+          question: 'Na hoeveel seconden voluit sprinten raakt het fosfaatsysteem uitgeput en neemt het melkzuursysteem (anaerobe glycolyse) het over?',
+          options: [
+            'Na ongeveer 6 – 8 seconden',
+            'Pas na 3 minuten sprinten',
+            'Direct na 0,10 seconden'
+          ],
+          correct: 0,
+          explanation: 'Helemaal goed! Het ATP-CP systeem levert energie voor maximaal ca. 6–8 seconden; daarna schakelt het melkzuursysteem bij.'
+        }
+      };
+
+      // Data: 8 Eindquizvragen (Vragen 5 t/m 12 -> totaal 12 vragen)
+      const FINAL_QUIZ_QUESTIONS = [
+        {
+          question: 'Vraag 5: Wat doe je in de laatste stap van de methodische trainingsopbouw nadat je sporter het trainingsplan heeft afgerond?',
+          options: [
+            'Je neemt exact dezelfde nulmeting-test opnieuw af om te controleren of het SMART-doel behaald is.',
+            'Je stopt direct met begeleiden zonder nog te meten.',
+            'Je neemt nu pas voor het eerst de anamnese af.'
+          ],
+          correct: 0,
+          explanation: 'Juist! Door te hertesten onder dezelfde omstandigheden controleer je objectief of het SMART-doel behaald is.'
+        },
+        {
+          question: 'Vraag 6: Welk type spiervezels is bij uitstek verantwoordelijk voor hoge snelheid en explosieve kracht?',
+          options: [
+            'Rode spiervezels (Type I / Slow-Twitch)',
+            'Witte spiervezels (Type II / Fast-Twitch)',
+            'Gladde spiervezels'
+          ],
+          correct: 1,
+          explanation: 'Klopt! Witte spiervezels (Type II) trekken razendsnel en krachtig samen en zijn grotendeels genetisch bepaald.'
+        },
+        {
+          question: 'Vraag 7: Een sprinter heeft 60 seconden rust genomen na een maximale sprint van 6 seconden. Hoeveel procent van zijn ATP- en CP-voorraad is ongeveer hersteld?',
+          options: [
+            'Ongeveer 50%',
+            'Ongeveer 85 – 90%',
+            'Volledig (100%)'
+          ],
+          correct: 1,
+          explanation: 'Helemaal goed: na 20–30s is ~50% hersteld, na 40s ~75%, na 60s ~85–90% en pas na 3–5 minuten 95–100%.'
+        },
+        {
+          question: 'Vraag 8: Wat is het belangrijkste verschil tussen snelheidsuithoudingsvermogen trainen in het fosfaatsysteem versus het melkzuursysteem?',
+          options: [
+            'In het fosfaatsysteem train je max. 6–8 sec op 95–100% zonder sterke verzuring; in het melkzuursysteem train je 10–40 sec op 85–95% met optredende verzuring.',
+            'In het fosfaatsysteem train je altijd langer dan 30 seconden; in het melkzuursysteem maximaal 3 seconden.',
+            'Er is geen verschil: beide methodes gebruik je alleen voor marathonlopers.'
+          ],
+          correct: 0,
+          explanation: 'Exact! Binnen het fosfaatsysteem (6–8s) houd je topsnelheid vast zonder zware verzuring; in het melkzuursysteem (10–40s) leer je weerstand bieden tegen melkzuur.'
+        },
+        {
+          question: 'Vraag 9: Welke vorm van snelheid gebruikt een voetballer die een schaarbeweging maakt, of een bokser die een snelle stootcombinatie plaatst?',
+          options: [
+            'Cyclische snelheid',
+            'Handelingssnelheid (actiesnelheid)',
+            'Maximale loopsnelheid'
+          ],
+          correct: 1,
+          explanation: 'Goed! Handelingssnelheid is het vermogen om snelle acties te realiseren binnen sportspecifieke coördinatiepatronen.'
+        },
+        {
+          question: 'Vraag 10 (100m verdeling): Wat is de juiste chronologische volgorde van de snelheidsvormen tijdens een 100 meter sprint?',
+          options: [
+            'Startschot: Reactiesnelheid → 0–40m: Acceleratiesnelheid → 40–75m: Maximale snelheid → 75–100m: Snelheidsuithoudingsvermogen (fosfaat).',
+            'Startschot: Maximale snelheid → 0–40m: Reactiesnelheid → 40–75m: Snelheidsuithoudingsvermogen → 75–100m: Acceleratiesnelheid.',
+            'Startschot: Acceleratiesnelheid → 0–40m: Snelheidsuithouding (melkzuur) → 40–100m: Reactiesnelheid.'
+          ],
+          correct: 0,
+          explanation: 'Top! Eerst reageer je op het schot (reactie), dan versnel je van 0–40m (acceleratie), tussen 40–75m bereik je je top (maximale snelheid) en op de laatste meters houd je dit vast (snelheidsuithouding fosfaat).'
+        },
+        {
+          question: 'Vraag 11 (100m praktijkcasus): Een atleet komt heel goed uit de startblokken (0–30m), maar verliest tussen 40 en 70 meter terrein op zijn tegenstanders. Welke trainingsmethode moet hij gericht verbeteren?',
+          options: [
+            'Reactiesnelheidstraining (4–6 herh., 1–2 min rust)',
+            'Maximale snelheidstraining (tot 6 herh. van max. 6 sec, 6 min volledig herstel, 100–110%)',
+            'Duurtraining op 70% van de maximale hartslag'
+          ],
+          correct: 1,
+          explanation: 'Juist! Tussen 40 en 70 meter ligt de fase van de maximale snelheid. Met vliegende sprints en 6 minuten volledig herstel verhoog je deze topsnelheid.'
+        },
+        {
+          question: 'Vraag 12: Bij een 100m sprint reageert een atleet in 0,08 seconden na het startschot. Wat is hiervan de conclusie?',
+          options: [
+            'Een nieuw wereldrecord reactiesnelheid.',
+            'Een valse start: fysiologisch kan een mens niet sneller dan 0,10 seconden reageren op een prikkel.',
+            'Een normale reactietijd voor een optisch signaal.'
+          ],
+          correct: 1,
+          explanation: 'Helemaal juist! Een reactie sneller dan 0,10 seconde betekent dat de atleet heeft gegokt en dus een valse start maakt.'
+        }
+      ];
+
+      // Hulpfunctie: Toast melding
+      window.showToast = function (msg, icon = '✅') {
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toast-msg');
+        const toastIcon = document.getElementById('toast-icon');
+        if (!toast) return;
+        toastMsg.textContent = msg;
+        toastIcon.textContent = icon;
+        toast.classList.remove('hidden');
+        clearTimeout(window._toastTimer);
+        window._toastTimer = setTimeout(() => {
+          toast.classList.add('hidden');
+        }, 3200);
+      };
+
+      // Controleer of alle 12 vragen goed zijn beantwoord
+      function getTotalQuestionsCount() {
+        return Object.keys(INLINE_CHECKS).length + FINAL_QUIZ_QUESTIONS.length; // 4 + 8 = 12
+      }
+
+      function getCorrectCount() {
+        let count = 0;
+        Object.keys(INLINE_CHECKS).forEach((k) => {
+          if (quizState.inline[k]) count++;
+        });
+        for (let i = 0; i < FINAL_QUIZ_QUESTIONS.length; i++) {
+          if (quizState.final[i]) count++;
+        }
+        return count;
+      }
+
+      function isAllQuizCompleted() {
+        return getCorrectCount() === getTotalQuestionsCount();
+      }
+
+      // Sudden Death Reset bij één fout antwoord!
+      function triggerSuddenDeathReset(questionLabel) {
+        quizState = { inline: {}, final: {} };
+        saveQuizState();
+        renderAllInlineChecks();
+        window.renderFinalQuiz();
+        updateLockUI();
+
+        const modal = document.getElementById('sudden-death-modal');
+        const reason = document.getElementById('sd-reason-text');
+        if (reason) {
+          reason.innerHTML = `Je gaf een fout antwoord bij <strong>${escapeHtml(questionLabel)}</strong>.<br><br>Alle eerder goed beantwoorde kennischecks zijn gereset naar <strong>0 / ${getTotalQuestionsCount()}</strong>. Lees de lesstof rustig door en begin opnieuw vanaf de eerste vraag!`;
+        }
+        if (modal) {
+          modal.classList.remove('hidden');
+        }
+      }
+
+      window.closeSuddenDeathModal = function () {
+        const modal = document.getElementById('sudden-death-modal');
+        if (modal) modal.classList.add('hidden');
+        const firstBox = document.getElementById('inline-kc-1-box');
+        if (firstBox) {
+          firstBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      };
+
+      function updateLockUI() {
+        const total = getTotalQuestionsCount(); // 12
+        const count = getCorrectCount();
+        const unlocked = isAllQuizCompleted();
+
+        const pill = document.getElementById('quiz-progress-pill');
+        const pillIcon = document.getElementById('quiz-progress-icon');
+        const pillText = document.getElementById('quiz-progress-text');
+        const scoreBig = document.getElementById('quiz-score-big');
+        const unlockBanner = document.getElementById('unlock-banner');
+
+        if (pillText) pillText.textContent = `Vragen: ${count} / ${total} goed`;
+        if (scoreBig) scoreBig.textContent = `${count} / ${total} goed`;
+
+        const lock2 = document.getElementById('nav-lock-2');
+        const lock3 = document.getElementById('nav-lock-3');
+
+        if (unlocked) {
+          if (pill) {
+            pill.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
+          }
+          if (pillIcon) pillIcon.textContent = '🔓';
+          if (lock2) lock2.textContent = '';
+          if (lock3) lock3.textContent = '';
+          if (unlockBanner) unlockBanner.classList.remove('hidden');
+        } else {
+          if (pill) {
+            pill.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200';
+          }
+          if (pillIcon) pillIcon.textContent = '🔒';
+          if (lock2) lock2.textContent = '🔒 ';
+          if (lock3) lock3.textContent = '🔒 ';
+          if (unlockBanner) unlockBanner.classList.add('hidden');
+        }
+
+        updateNavStyles(window._currentModule || 1);
+      }
+
+      function updateNavStyles(activeMod) {
+        const unlocked = isAllQuizCompleted();
+        [1, 2, 3].forEach((m) => {
+          const btn = document.getElementById(`nav-btn-${m}`);
+          if (!btn) return;
+          if (m === activeMod) {
+            btn.className = 'tab-active px-3.5 py-2 rounded-lg text-xs md:text-sm font-semibold border transition whitespace-nowrap';
+          } else if (m > 1 && !unlocked) {
+            btn.className = 'tab-locked px-3.5 py-2 rounded-lg text-xs md:text-sm font-semibold border transition whitespace-nowrap';
+          } else {
+            btn.className = 'tab-inactive px-3.5 py-2 rounded-lg text-xs md:text-sm font-semibold border transition whitespace-nowrap';
+          }
+        });
+      }
+
+      // Module Wisselen (met verplichte quiz-check voor Module 2 & 3)
+      window.switchModule = function (modNum) {
+        if (modNum > 1 && !isAllQuizCompleted()) {
+          const remaining = getTotalQuestionsCount() - getCorrectCount();
+          window.showToast(`Beantwoord eerst alle ${getTotalQuestionsCount()} vragen goed in Module 1 (nog ${remaining} te gaan)!`, '🔒');
+          const firstUnsolvedInline = [1, 2, 3, 4].find((id) => !quizState.inline[id]);
+          if (firstUnsolvedInline) {
+            const box = document.getElementById(`inline-kc-${firstUnsolvedInline}-box`);
+            if (box) box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          } else {
+            const quizBox = document.getElementById('quiz-status-box');
+            if (quizBox) quizBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+          return;
+        }
+
+        window._currentModule = modNum;
+        [1, 2, 3].forEach((m) => {
+          const sec = document.getElementById(`module-${m}`);
+          if (sec) {
+            if (m === modNum) sec.classList.remove('hidden');
+            else sec.classList.add('hidden');
+          }
+        });
+
+        updateNavStyles(modNum);
+
+        if (modNum === 3) {
+          window.updatePreview();
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+
+      // Check Vorige Opdracht: Anamnese in Teams
+      window.setAnamneseStatus = function (done) {
+        const fb = document.getElementById('anamnese-feedback');
+        if (!fb) return;
+        fb.classList.remove('hidden');
+        if (done) {
+          fb.className = 'mt-3 text-xs md:text-sm rounded-lg p-3 bg-emerald-900/60 border border-emerald-500/50 text-emerald-200';
+          fb.innerHTML = '✅ <strong>Goed bezig!</strong> Je anamnese staat in Teams. Gebruik de gegevens van je proefpersoon nu om een passende snelheidstraining te ontwerpen.';
+        } else {
+          fb.className = 'mt-3 text-xs md:text-sm rounded-lg p-3 bg-amber-900/60 border border-amber-500/50 text-amber-200';
+          fb.innerHTML = '⚠️ <strong>Actiepunt huiswerk:</strong> Laat de anamnese zo snel mogelijk invullen door je proefpersoon, upload deze in <strong>Microsoft Teams</strong> en zoek alvast een passende snelheidstest bij jullie doelstelling.';
+        }
+      };
+
+      // Stap 1.0: Methodische Trainingsopbouw Stappen
+      window.selectStep = function (stepNum) {
+        const data = STEP_DATA[stepNum];
+        if (!data) return;
+
+        for (let i = 1; i <= 5; i++) {
+          const btn = document.getElementById(`step-btn-${i}`);
+          if (!btn) continue;
+          if (i === stepNum) {
+            btn.className = 'step-btn text-left p-3 rounded-xl border-2 border-slate-900 bg-slate-900 text-white transition';
+            btn.querySelector('div:nth-child(1)').className = 'text-xs font-bold text-amber-400';
+            btn.querySelector('div:nth-child(3)').className = 'text-[11px] text-slate-300 mt-0.5';
+          } else {
+            btn.className = 'step-btn text-left p-3 rounded-xl border-2 border-slate-200 bg-slate-50 hover:border-slate-400 text-slate-900 transition';
+            btn.querySelector('div:nth-child(1)').className = 'text-xs font-bold text-amber-600';
+            btn.querySelector('div:nth-child(3)').className = 'text-[11px] text-slate-500 mt-0.5';
+          }
+        }
+
+        const box = document.getElementById('step-detail-box');
+        if (box) {
+          box.innerHTML = `
+            <span class="inline-block text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded bg-amber-100 text-amber-800 mb-2">${data.badge}</span>
+            <h4 class="text-base md:text-lg font-extrabold text-slate-900 mb-1.5">${data.title}</h4>
+            <p class="text-sm text-slate-700 mb-3">${data.desc}</p>
+            <ul class="space-y-1.5 text-xs md:text-sm text-slate-700 list-disc list-inside">
+              ${data.bullets.map((b) => `<li>${b}</li>`).join('')}
+            </ul>
+          `;
+        }
+      };
+
+      // Tussentijdse Kennischecks Renderen & Beantwoorden
+      function renderAllInlineChecks() {
+        [1, 2, 3, 4].forEach((id) => {
+          const item = INLINE_CHECKS[id];
+          const box = document.getElementById(`inline-kc-${id}-box`);
+          if (!item || !box) return;
+          const isSolved = !!quizState.inline[id];
+
+          box.className = isSolved
+            ? 'bg-emerald-50/70 border border-emerald-300 rounded-xl p-4 transition'
+            : 'bg-amber-50/70 border border-amber-300 rounded-xl p-4 transition';
+
+          box.innerHTML = `
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+              <div class="text-xs font-extrabold uppercase text-amber-900">${item.label}</div>
+              <span class="text-[11px] font-bold px-2 py-0.5 rounded ${isSolved ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-200/80 text-amber-900'}">
+                ${isSolved ? '✓ Goed beantwoord' : '⚠️ Fout = opnieuw starten'}
+              </span>
+            </div>
+            <p class="text-sm font-semibold text-slate-900 mb-3">${item.question}</p>
+            <div class="grid grid-cols-1 ${item.options.length === 2 ? 'sm:grid-cols-2' : 'md:grid-cols-3'} gap-2">
+              ${item.options.map((opt, optIdx) => `
+                <button type="button" onclick="window.answerInlineCheck(${id}, ${optIdx})" class="text-left px-3 py-2 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-xs font-semibold text-slate-800 transition">
+                  ${String.fromCharCode(65 + optIdx)}. ${opt}
+                </button>
+              `).join('')}
+            </div>
+            ${isSolved ? `
+              <div class="mt-2.5 text-xs p-2.5 rounded-lg font-medium bg-emerald-100 text-emerald-900 border border-emerald-300">
+                ✅ ${item.explanation}
+              </div>
+            ` : ''}
+          `;
+        });
+      }
+
+      window.answerInlineCheck = function (id, optIdx) {
+        const item = INLINE_CHECKS[id];
+        if (!item) return;
+
+        if (optIdx === item.correct) {
+          quizState.inline[id] = true;
+          saveQuizState();
+          renderAllInlineChecks();
+          updateLockUI();
+          if (isAllQuizCompleted()) {
+            window.showToast('Alle 12 vragen goed! Module 2 & 3 zijn ontgrendeld.', '🎉');
+          } else {
+            window.showToast(`Goed! Voortgang: ${getCorrectCount()} / ${getTotalQuestionsCount()}`, '✅');
+          }
+        } else {
+          triggerSuddenDeathReset(item.label);
+        }
+      };
+
+      // 100m Sprint Fase Selecteren
+      window.selectSprintPhase = function (phaseKey) {
+        const p = SPRINT_PHASES[phaseKey];
+        const box = document.getElementById('sprint-phase-detail');
+        if (!p || !box) return;
+        box.innerHTML = `
+          <div>
+            <span class="text-xs font-extrabold uppercase tracking-wider ${p.color}">${p.tag}</span>
+            <h4 class="text-lg font-extrabold text-slate-900 mt-1 mb-2">${p.title}</h4>
+            <p class="text-xs md:text-sm text-slate-700 leading-relaxed">${p.desc}</p>
+          </div>
+          <div class="mt-4 bg-white border border-slate-200 rounded-lg p-3 text-xs font-semibold text-slate-800">
+            🎯 ${p.training}
+          </div>
+        `;
+      };
+
+      // Trainingsmethoden Tabs
+      window.selectMethodTab = function (key) {
+        const m = METHODS_DATA[key];
+        if (!m) return;
+
+        document.querySelectorAll('.method-tab').forEach((btn) => {
+          btn.classList.remove('tab-active');
+          btn.classList.add('tab-inactive');
+        });
+        const activeBtn = document.getElementById(`m-tab-${key}`);
+        if (activeBtn) {
+          activeBtn.classList.remove('tab-inactive');
+          activeBtn.classList.add('tab-active');
+        }
+
+        const container = document.getElementById('method-detail-container');
+        if (container) {
+          container.innerHTML = `
+            <h4 class="text-lg font-extrabold text-slate-900">${m.title}</h4>
+            <p class="text-xs md:text-sm text-amber-700 font-semibold mb-4">${m.subtitle}</p>
+            <ul class="space-y-2 text-xs md:text-sm text-slate-700 mb-5 list-disc list-inside">
+              ${m.details.map((d) => `<li>${d}</li>`).join('')}
+            </ul>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div class="bg-white border border-slate-200 rounded-xl p-3.5">
+                <div class="text-xs font-extrabold uppercase text-blue-700 mb-1">F = Frequentie</div>
+                <div class="text-xs md:text-sm font-semibold text-slate-900">${m.f}</div>
+              </div>
+              <div class="bg-white border border-slate-200 rounded-xl p-3.5">
+                <div class="text-xs font-extrabold uppercase text-amber-700 mb-1">I = Intensiteit</div>
+                <div class="text-xs md:text-sm font-semibold text-slate-900">${m.i}</div>
+              </div>
+              <div class="bg-white border border-slate-200 rounded-xl p-3.5">
+                <div class="text-xs font-extrabold uppercase text-emerald-700 mb-1">T = Tijd (Duur &amp; Rust)</div>
+                <div class="text-xs md:text-sm font-semibold text-slate-900">${m.t}</div>
+              </div>
+            </div>
+          `;
+        }
+      };
+
+      // ATP-CP Herstel Simulator
+      window.updateAtpSimulator = function (sec) {
+        document.querySelectorAll('.atp-btn').forEach((b) => {
+          b.className = 'atp-btn px-2.5 py-2 rounded-lg text-xs font-bold border border-slate-300 bg-white hover:bg-slate-100';
+        });
+        const active = document.getElementById(`atp-btn-${sec}`);
+        if (active) {
+          active.className = 'atp-btn px-2.5 py-2 rounded-lg text-xs font-bold border border-slate-900 bg-slate-900 text-white';
+        }
+
+        const pctText = document.getElementById('atp-percent-text');
+        const bar = document.getElementById('atp-progress-bar');
+        const advice = document.getElementById('atp-advice-text');
+
+        if (sec === 25) {
+          pctText.textContent = '± 50%';
+          pctText.className = 'text-lg font-extrabold text-rose-600';
+          bar.style.width = '50%';
+          bar.className = 'h-full bg-rose-500 transition-all duration-300';
+          advice.innerHTML = '<strong>Onvolledig herstel:</strong> Slechts de helft van de ATP-CP voorraad is terug. Bij een volgende sprint treedt snel verzuring op.';
+        } else if (sec === 40) {
+          pctText.textContent = '± 75%';
+          pctText.className = 'text-lg font-extrabold text-amber-600';
+          bar.style.width = '75%';
+          bar.className = 'h-full bg-amber-500 transition-all duration-300';
+          advice.innerHTML = '<strong>Gedeeltelijk herstel:</strong> Onvoldoende voor maximale topsnelheid, wel bruikbaar bij herhaalde korte spelsituaties.';
+        } else if (sec === 60) {
+          pctText.textContent = '85 – 90%';
+          pctText.className = 'text-lg font-extrabold text-blue-600';
+          bar.style.width = '88%';
+          bar.className = 'h-full bg-blue-500 transition-all duration-300';
+          advice.innerHTML = '<strong>Bijna hersteld:</strong> Geschikt voor <em>reactiesnelheid</em> (1–2 min rust) of <em>snelheidsuithouding fosfaatsysteem</em> (1–3 min rust).';
+        } else {
+          pctText.textContent = '95 – 100%';
+          pctText.className = 'text-lg font-extrabold text-emerald-600';
+          bar.style.width = '98%';
+          bar.className = 'h-full bg-emerald-500 transition-all duration-300';
+          advice.innerHTML = '<strong>Volledig herstel:</strong> Ideaal voor <em>maximale snelheid</em> en <em>acceleratiesnelheid</em> (vermogen trainen op 100%).';
+        }
+      };
+
+      // Melkzuursysteem Simulator
+      window.updateLactateSimulator = function (val) {
+        const sec = parseInt(val, 10);
+        const label = document.getElementById('lactate-sec-label');
+        const badge = document.getElementById('lactate-zone-badge');
+        const shareAtp = document.getElementById('share-atp');
+        const shareLac = document.getElementById('share-lac');
+        const barAtp = document.getElementById('bar-atp');
+        const barLac = document.getElementById('bar-lac');
+        const advice = document.getElementById('lactate-advice-text');
+
+        if (label) label.textContent = `${sec} seconden`;
+
+        let atpPct = 90;
+        if (sec <= 6) {
+          atpPct = Math.round(98 - sec * 2);
+          badge.textContent = 'Fosfaatsysteem (Alactisch)';
+          badge.className = 'px-2 py-0.5 rounded bg-blue-100 text-blue-800';
+          advice.innerHTML = '<strong>Fosfaatsysteem leidend (0–6s):</strong> Vrijwel geen melkzuurvorming. Hier train je <em>acceleratie</em>, <em>maximale snelheid</em> of <em>snelheidsuithouding (fosfaat)</em>.';
+        } else if (sec <= 12) {
+          atpPct = Math.round(85 - (sec - 6) * 6);
+          badge.textContent = 'Overgangszone';
+          badge.className = 'px-2 py-0.5 rounded bg-amber-100 text-amber-800';
+          advice.innerHTML = '<strong>Overgangsfase (7–12s):</strong> De ATP-CP voorraad raakt uitgeput; de anaerobe glycolyse (melkzuursysteem) schakelt bij om het tempo hoog te houden.';
+        } else {
+          atpPct = Math.max(8, Math.round(50 - (sec - 12) * 1.1));
+          badge.textContent = 'Melkzuursysteem (Lactisch)';
+          badge.className = 'px-2 py-0.5 rounded bg-rose-100 text-rose-800';
+          advice.innerHTML = '<strong>Melkzuursysteem domineert (13–50s):</strong> Hoge lactaatproductie en verzuring (H⁺-ionen). Hiermee train je <em>snelheidsuithoudingsvermogen in het melkzuursysteem</em>.';
+        }
+
+        const lacPct = 100 - atpPct;
+        shareAtp.textContent = `${atpPct}%`;
+        shareLac.textContent = `${lacPct}%`;
+        barAtp.style.width = `${atpPct}%`;
+        barLac.style.width = `${lacPct}%`;
+      };
+
+      // Eindquiz Renderen & Antwoorden Checken
+      window.renderFinalQuiz = function () {
+        const container = document.getElementById('final-quiz-container');
+        if (!container) return;
+
+        container.innerHTML = FINAL_QUIZ_QUESTIONS.map((item, qIdx) => {
+          const isSolved = !!quizState.final[qIdx];
+          return `
+            <div id="fq-card-${qIdx}" class="p-4 md:p-5 rounded-xl border ${isSolved ? 'border-emerald-300 bg-emerald-50/40' : 'border-slate-200 bg-slate-50'} transition">
+              <div class="flex items-start justify-between gap-3 mb-3">
+                <p class="font-bold text-sm md:text-base text-slate-900">${item.question}</p>
+                <span id="fq-badge-${qIdx}" class="shrink-0 text-[11px] font-bold px-2.5 py-0.5 rounded ${isSolved ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-700'}">
+                  ${isSolved ? '✓ Goed' : 'Open'}
+                </span>
+              </div>
+              <div class="space-y-2">
+                ${item.options.map((opt, optIdx) => `
+                  <button type="button" onclick="window.answerFinalQuiz(${qIdx}, ${optIdx})" class="w-full text-left px-3.5 py-2.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-xs md:text-sm font-medium text-slate-800 transition">
+                    ${String.fromCharCode(65 + optIdx)}. ${opt}
+                  </button>
+                `).join('')}
+              </div>
+              <div id="fq-feedback-${qIdx}" class="${isSolved ? '' : 'hidden'} mt-3 text-xs p-3 rounded-lg font-medium ${isSolved ? 'bg-emerald-100 text-emerald-900 border border-emerald-300' : ''}">
+                ${isSolved ? `✅ ${item.explanation}` : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+      };
+
+      window.answerFinalQuiz = function (qIdx, optIdx) {
+        const item = FINAL_QUIZ_QUESTIONS[qIdx];
+        if (!item) return;
+
+        if (optIdx === item.correct) {
+          quizState.final[qIdx] = true;
+          saveQuizState();
+          window.renderFinalQuiz();
+          updateLockUI();
+          if (isAllQuizCompleted()) {
+            window.showToast('Alle 12 vragen goed! Module 2 & 3 zijn ontgrendeld.', '🎉');
+          } else {
+            window.showToast(`Goed! Voortgang: ${getCorrectCount()} / ${getTotalQuestionsCount()}`, '✅');
+          }
+        } else {
+          triggerSuddenDeathReset(`Eindtoets Vraag ${qIdx + 5}`);
+        }
+      };
+
+      function saveQuizState() {
+        try {
+          localStorage.setItem(QUIZ_STORAGE_KEY, JSON.stringify(quizState));
+        } catch (e) {}
+      }
+
+      function loadQuizState() {
+        try {
+          const raw = localStorage.getItem(QUIZ_STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed && typeof parsed === 'object') {
+              quizState.inline = parsed.inline || {};
+              quizState.final = parsed.final || {};
+            }
+          }
+        } catch (e) {}
+      }
+
+      // =========================================================
+      // MODULE 2: TRAINING BUILDER & DYNAMISCHE BLOKKEN
+      // =========================================================
+      function getMethodKeyByLabel(label) {
+        if (!label) return 'reactie';
+        const l = label.toLowerCase();
+        if (l.includes('reactie')) return 'reactie';
+        if (l.includes('acceleratie')) return 'acceleratie';
+        if (l.includes('maximale')) return 'maximaal';
+        if (l.includes('melkzuur')) return 'uithouding_lactaat';
+        return 'uithouding_atp';
+      }
+
+      window.renderTrainingBlocks = function () {
+        const container = document.getElementById('training-blocks-container');
+        if (!container) return;
+
+        const methodOptions = [
+          'Reactiesnelheid',
+          'Acceleratiesnelheid',
+          'Maximale snelheid',
+          'Snelheidsuithoudingsvermogen (Fosfaatsysteem)',
+          'Snelheidsuithoudingsvermogen (Melkzuursysteem)'
+        ];
+
+        container.innerHTML = formData.blocks.map((block, index) => {
+          const mKey = getMethodKeyByLabel(block.methode);
+          const fitHint = METHODS_DATA[mKey] ? METHODS_DATA[mKey].shortFit : '';
+
+          return `
+            <div class="border border-slate-300 rounded-xl p-4 md:p-5 bg-slate-50/70">
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-3 pb-2.5 border-b border-slate-200">
+                <div class="flex items-center gap-2">
+                  <span class="px-2.5 py-1 rounded-lg bg-slate-900 text-white text-xs font-extrabold">Trainingsblok ${index + 1}</span>
+                  <span class="text-xs font-semibold text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded">${fitHint}</span>
+                </div>
+                ${formData.blocks.length > 1 ? `
+                  <button type="button" onclick="window.removeTrainingBlock(${index})" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 transition">
+                    🗑️ Verwijder blok
+                  </button>
+                ` : ''}
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Trainingsmethode *</label>
+                  <select onchange="window.updateBlockField(${index}, 'methode', this.value)" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white font-semibold">
+                    ${methodOptions.map((opt) => `<option value="${opt}" ${block.methode === opt ? 'selected' : ''}>${opt}</option>`).join('')}
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Oefening &amp; Uitvoering *</label>
+                  <input type="text" value="${escapeHtml(block.oefening)}" oninput="window.updateBlockField(${index}, 'oefening', this.value)" placeholder="Bijv. Start vanuit zit/lig op fluitsignaal, 10m sprint" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white" />
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Tijd (Herhalingen &amp; Duur) *</label>
+                  <input type="text" value="${escapeHtml(block.tijd)}" oninput="window.updateBlockField(${index}, 'tijd', this.value)" placeholder="Bijv. 5 herh. x 3 sec" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Rustinterval (Herstel) *</label>
+                  <input type="text" value="${escapeHtml(block.rust)}" oninput="window.updateBlockField(${index}, 'rust', this.value)" placeholder="Bijv. 2 min (90% ATP-CP)" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Intensiteit (% max) *</label>
+                  <input type="text" value="${escapeHtml(block.intensiteit)}" oninput="window.updateBlockField(${index}, 'intensiteit', this.value)" placeholder="Bijv. 100%" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Frequentie (per week) *</label>
+                  <input type="text" value="${escapeHtml(block.frequentie)}" oninput="window.updateBlockField(${index}, 'frequentie', this.value)" placeholder="Bijv. 2x per week" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white" />
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        updateUniqueMethodsBadge();
+      };
+
+      function updateUniqueMethodsBadge() {
+        const badge = document.getElementById('method-count-badge');
+        if (!badge) return;
+        const uniqueMethods = new Set(formData.blocks.map((b) => b.methode));
+        const count = uniqueMethods.size;
+        if (count >= 2) {
+          badge.className = 'text-xs font-bold px-3 py-1.5 rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-300';
+          badge.textContent = `✓ ${count} unieke methodes gekozen`;
+        } else {
+          badge.className = 'text-xs font-bold px-3 py-1.5 rounded-lg bg-amber-100 text-amber-800 border border-amber-300';
+          badge.textContent = `⚠️ ${count} / 2 unieke methodes`;
+        }
+      }
+
+      window.addTrainingBlock = function () {
+        const methods = [
+          'Reactiesnelheid',
+          'Acceleratiesnelheid',
+          'Maximale snelheid',
+          'Snelheidsuithoudingsvermogen (Fosfaatsysteem)',
+          'Snelheidsuithoudingsvermogen (Melkzuursysteem)'
+        ];
+        const nextMethod = methods[formData.blocks.length % methods.length];
+        formData.blocks.push({
+          id: Date.now(),
+          methode: nextMethod,
+          oefening: '',
+          tijd: '',
+          rust: '',
+          intensiteit: '',
+          frequentie: ''
+        });
+        window.renderTrainingBlocks();
+        persistFormData();
+        window.showToast('Nieuw trainingsblok toegevoegd', '➕');
+      };
+
+      window.removeTrainingBlock = function (index) {
+        if (formData.blocks.length <= 1) return;
+        formData.blocks.splice(index, 1);
+        window.renderTrainingBlocks();
+        persistFormData();
+        window.showToast('Trainingsblok verwijderd', '🗑️');
+      };
+
+      window.updateBlockField = function (index, field, value) {
+        if (!formData.blocks[index]) return;
+        formData.blocks[index][field] = value;
+        if (field === 'methode') {
+          window.renderTrainingBlocks();
+        }
+        persistFormData();
+      };
+
+      window.saveFormData = function () {
+        formData.student = document.getElementById('inp-student').value;
+        formData.klas = document.getElementById('inp-klas').value;
+        formData.proefpersoon = document.getElementById('inp-proefpersoon').value;
+        formData.datum = document.getElementById('inp-datum').value;
+        formData.sport = document.getElementById('inp-sport').value;
+        formData.smart = document.getElementById('inp-smart').value;
+        formData.soorten = document.getElementById('inp-soorten').value;
+        formData.waaromEisen = document.getElementById('inp-waarom-eisen').value;
+        formData.warmup = document.getElementById('inp-warmup').value;
+        formData.cooldown = document.getElementById('inp-cooldown').value;
+        formData.toelichting = document.getElementById('inp-toelichting').value;
+
+        const checked = [];
+        document.querySelectorAll('.wet-checkbox:checked').forEach((cb) => checked.push(cb.value));
+        formData.wetten = checked;
+
+        persistFormData();
+      };
+
+      function persistFormData() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+        } catch (e) {}
+      }
+
+      function loadFormData() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed && typeof parsed === 'object') {
+              formData = Object.assign(formData, parsed);
+            }
+          }
+        } catch (e) {}
+        populateInputsFromState();
+      }
+
+      function populateInputsFromState() {
+        document.getElementById('inp-student').value = formData.student || '';
+        document.getElementById('inp-klas').value = formData.klas || '';
+        document.getElementById('inp-proefpersoon').value = formData.proefpersoon || '';
+        document.getElementById('inp-datum').value = formData.datum || new Date().toISOString().split('T')[0];
+        document.getElementById('inp-sport').value = formData.sport || '';
+        document.getElementById('inp-smart').value = formData.smart || '';
+        document.getElementById('inp-soorten').value = formData.soorten || '';
+        document.getElementById('inp-waarom-eisen').value = formData.waaromEisen || '';
+        document.getElementById('inp-warmup').value = formData.warmup || '';
+        document.getElementById('inp-cooldown').value = formData.cooldown || '';
+        document.getElementById('inp-toelichting').value = formData.toelichting || '';
+
+        document.querySelectorAll('.wet-checkbox').forEach((cb) => {
+          cb.checked = Array.isArray(formData.wetten) && formData.wetten.includes(cb.value);
+        });
+
+        window.renderTrainingBlocks();
+      }
+
+      // =========================================================
+      // WACHTWOORD MODAL (TK2026!) VOOR VOORBEELDTRAINING
+      // =========================================================
+      window.openPasswordModal = function () {
+        const modal = document.getElementById('password-modal');
+        const input = document.getElementById('pwd-input');
+        const err = document.getElementById('pwd-error');
+        if (!modal) return;
+        input.value = '';
+        err.classList.add('hidden');
+        modal.classList.remove('hidden');
+        setTimeout(() => input.focus(), 50);
+      };
+
+      window.closePasswordModal = function () {
+        const modal = document.getElementById('password-modal');
+        if (modal) modal.classList.add('hidden');
+      };
+
+      window.submitPassword = function () {
+        const input = document.getElementById('pwd-input');
+        const err = document.getElementById('pwd-error');
+        if (!input) return;
+
+        if (input.value.trim() === DOCENT_PWD) {
+          window.closePasswordModal();
+          fillExampleData();
+          window.showToast('Voorbeeldtraining (Voetbal) geladen!', '⚽');
+        } else {
+          err.classList.remove('hidden');
+          input.focus();
+        }
+      };
+
+      function fillExampleData() {
+        formData = {
+          student: 'Voorbeeldstudent ROC Mondriaan',
+          klas: 'LSB-2A',
+          proefpersoon: 'Buitenspeler Voetbal (JO19-1)',
+          datum: new Date().toISOString().split('T')[0],
+          sport: 'Voetbal (Veldvoetbal - Buitenspeler)',
+          smart: 'Over 6 weken verbetert de buitenspeler zijn 20 meter sprinttijd (acceleratie) van 3,18 sec naar 3,05 sec en zijn herhaalde sprintvermogen zonder snelheidsverlies.',
+          soorten: '1. Reactiesnelheid (reageren op dieptepass of balverlies)\n2. Acceleratiesnelheid (eerste 10–20 meter explosief wegsprinten)\n3. Snelheidsuithoudingsvermogen fosfaatsysteem (herhaalde korte sprints in de eindfase)',
+          waaromEisen: 'Als buitenspeler moet je razendsnel anticiperen op een steekpass en binnen de eerste 15 meter je directe tegenstander passeren om een voorzet te geven.',
+          warmup: '12 min: rustig inlopen, dynamische mobiliteit heup/hamstrings, loopscholing (skippings, kaatsen) en 3x 20m steigerung (70-85-95%).',
+          cooldown: '6 min rustig uitlopen en lichte rekoefeningen voor hamstrings en kuiten.',
+          wetten: ['Specificiteit', 'Overload (overbelasting)', 'Supercompensatie & Herstel'],
+          toelichting: 'We starten uitgerust met reactiesnelheid (CZS scherp) gevolgd door acceleratiesnelheid (0-20m) met 3 minuten volledig herstel zodat de ATP-CP voorraad weer 95-100% hersteld is (vermogen trainen). Tot slot trainen we snelheidsuithoudingsvermogen in het fosfaatsysteem (max. 6 sec met 90 sec gedeeltelijk herstel) zodat de speler herhaalde explosieve acties zonder zware verzuring volhoudt. Na 6 weken hertesten we de 20m sprint.',
+          blocks: [
+            {
+              id: 101,
+              methode: 'Reactiesnelheid',
+              oefening: 'Start vanuit lichte dribbel op visueel signaal (kleur pion coach) direct 8m sprint naar links of rechts',
+              tijd: '5 herhalingen x 2 sec',
+              rust: '1,5 min volledig herstel',
+              intensiteit: '100%',
+              frequentie: '2x per week'
+            },
+            {
+              id: 102,
+              methode: 'Acceleratiesnelheid',
+              oefening: 'Explosieve sprintstart vanuit stilstand over 20 meter (focus op voorwaartse helling en krachtige arminzet)',
+              tijd: '5 herhalingen x 3,2 sec',
+              rust: '3,5 min volledig herstel (95-100% ATP-CP)',
+              intensiteit: '100%',
+              frequentie: '2x per week'
+            },
+            {
+              id: 103,
+              methode: 'Snelheidsuithoudingsvermogen (Fosfaatsysteem)',
+              oefening: 'Pendelsprint 15m heen + 15m terug (totaal 30m, max. 6 sec) met balaanname aan het einde',
+              tijd: '6 herhalingen x 6 sec',
+              rust: '90 sec gedeeltelijk herstel (~85% ATP-CP)',
+              intensiteit: '95 - 100%',
+              frequentie: '1 - 2x per week'
+            }
+          ]
+        };
+        persistFormData();
+        populateInputsFromState();
+      }
+
+      // Reset Modal
+      window.openResetModal = function () {
+        const modal = document.getElementById('reset-modal');
+        if (modal) modal.classList.remove('hidden');
+      };
+
+      window.closeResetModal = function () {
+        const modal = document.getElementById('reset-modal');
+        if (modal) modal.classList.add('hidden');
+      };
+
+      window.confirmResetAll = function () {
+        localStorage.removeItem(STORAGE_KEY);
+        formData = {
+          student: '',
+          klas: '',
+          proefpersoon: '',
+          datum: new Date().toISOString().split('T')[0],
+          sport: '',
+          smart: '',
+          soorten: '',
+          waaromEisen: '',
+          warmup: '',
+          cooldown: '',
+          wetten: [],
+          toelichting: '',
+          blocks: [
+            { id: 1, methode: 'Reactiesnelheid', oefening: '', tijd: '', rust: '', intensiteit: '', frequentie: '' },
+            { id: 2, methode: 'Acceleratiesnelheid', oefening: '', tijd: '', rust: '', intensiteit: '', frequentie: '' }
+          ]
+        };
+        populateInputsFromState();
+        window.closeResetModal();
+        window.showToast('Alle velden zijn leeggemaakt', '🧹');
+      };
+
+      // =========================================================
+      // MODULE 3: A4 VOORVERTOON & PDF DOWNLOAD
+      // =========================================================
+      window.updatePreview = function () {
+        const setTxt = (id, val) => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = val && val.trim() ? val : '-';
+        };
+
+        setTxt('prev-student', formData.student);
+        setTxt('prev-klas', formData.klas);
+        setTxt('prev-proefpersoon', formData.proefpersoon);
+        setTxt('prev-datum', formData.datum);
+        setTxt('prev-sport', formData.sport);
+        setTxt('prev-smart', formData.smart);
+        setTxt('prev-soorten', formData.soorten);
+        setTxt('prev-waarom-eisen', formData.waaromEisen);
+        setTxt('prev-warmup', formData.warmup);
+        setTxt('prev-cooldown', formData.cooldown);
+        setTxt('prev-wetten', formData.wetten && formData.wetten.length ? formData.wetten.join(', ') : 'Geen geselecteerd');
+        setTxt('prev-toelichting', formData.toelichting);
+
+        const tbody = document.getElementById('prev-blocks-tbody');
+        if (tbody) {
+          tbody.innerHTML = formData.blocks.map((b, i) => `
+            <tr class="${i % 2 === 1 ? 'bg-slate-50' : 'bg-white'} no-break">
+              <td class="border border-slate-300 p-2 align-top">
+                <div class="font-bold text-slate-900">Blok ${i + 1}</div>
+                <div class="text-amber-700 font-semibold">${escapeHtml(b.methode)}</div>
+              </td>
+              <td class="border border-slate-300 p-2 align-top text-slate-800">${escapeHtml(b.oefening) || '-'}</td>
+              <td class="border border-slate-300 p-2 align-top text-slate-800">${escapeHtml(b.tijd) || '-'}</td>
+              <td class="border border-slate-300 p-2 align-top text-slate-800">${escapeHtml(b.rust) || '-'}</td>
+              <td class="border border-slate-300 p-2 align-top text-slate-800">
+                <div><strong>Int:</strong> ${escapeHtml(b.intensiteit) || '-'}</div>
+                <div><strong>Freq:</strong> ${escapeHtml(b.frequentie) || '-'}</div>
+              </td>
+            </tr>
+          `).join('');
+        }
+
+        // Compleetheidschecklist bijwerken
+        const uniqueMethods = new Set(formData.blocks.map((b) => b.methode)).size;
+        const blocksFilled = formData.blocks.every((b) => b.oefening.trim() && b.tijd.trim() && b.rust.trim());
+        const checks = [
+          { label: 'Naam & Klas ingevuld', ok: !!(formData.student.trim() && formData.klas.trim()) },
+          { label: 'Sport & SMART-doel', ok: !!formData.sport.trim() },
+          { label: 'Snelheidseisen geanalyseerd', ok: !!(formData.soorten.trim() && formData.waaromEisen.trim()) },
+          { label: 'Min. 2 methodes & schema', ok: uniqueMethods >= 2 && blocksFilled },
+          { label: 'Toelichting ingevuld', ok: !!formData.toelichting.trim() }
+        ];
+
+        const listEl = document.getElementById('completeness-list');
+        if (listEl) {
+          listEl.innerHTML = checks.map((c) => `
+            <div class="px-3 py-2 rounded-lg border font-semibold flex items-center gap-2 ${c.ok ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-amber-50 border-amber-200 text-amber-800'}">
+              <span>${c.ok ? '✅' : '⚠️'}</span>
+              <span>${c.label}</span>
+            </div>
+          `).join('');
+        }
+      };
+
+      window.downloadPdf = function () {
+        window.updatePreview();
+        const element = document.getElementById('pdf-document');
+        const btn = document.getElementById('btn-download-pdf');
+        if (!element) return;
+
+        const cleanName = (formData.student || 'Student').replace(/[^a-zA-Z0-9_-]/g, '_');
+        const cleanSport = (formData.sport || 'Snelheidstraining').replace(/[^a-zA-Z0-9_-]/g, '_');
+        const filename = `Opdracht_Snelheidstraining_${cleanName}_${cleanSport}.pdf`;
+
+        if (typeof html2pdf === 'undefined') {
+          window.showToast('PDF-bibliotheek niet geladen, gebruik Print -> Opslaan als PDF', '🖨️');
+          window.print();
+          return;
+        }
+
+        const origHtml = btn.innerHTML;
+        btn.innerHTML = '⏳ PDF genereren...';
+        btn.disabled = true;
+
+        const opt = {
+          margin: [8, 8, 8, 8],
+          filename: filename,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(element).save().then(() => {
+          btn.innerHTML = origHtml;
+          btn.disabled = false;
+          window.showToast('PDF gedownload! Upload dit bestand in Teams.', '📥');
+        }).catch(() => {
+          btn.innerHTML = origHtml;
+          btn.disabled = false;
+          window.print();
+        });
+      };
+
+      function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      // Initialisatie bij laden pagina
+      function init() {
+        window._currentModule = 1;
+        loadQuizState();
+        loadFormData();
+
+        window.selectStep(1);
+        window.selectSprintPhase('reactie');
+        window.selectMethodTab('reactie');
+        window.updateAtpSimulator(240);
+        window.updateLactateSimulator(15);
+
+        renderAllInlineChecks();
+        window.renderFinalQuiz();
+        updateLockUI();
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+</body>
+</html>
